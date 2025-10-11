@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Ataxia Monitor</string>
+    <string name="start_session">Start Session</string>
+    <string name="stop_session">Stop Session</string>
+    <string name="session_history">Session History</string>
+    <string name="live_metrics">Live Metrics</string>
+    <string name="no_sessions">No recorded sessions yet</string>
+    <string name="session_details">Session Details</string>
+    <string name="export_data">Export Data</string>
+</resources>
