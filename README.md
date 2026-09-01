@@ -1,64 +1,187 @@
 # Ataxia Monitor
 
-An Android application for capturing high-frequency sensor data from a wire-maze device used in ataxia clinical trials. The app records readings from time-of-flight (ToF), gyroscope, accelerometer, and rotation vector sensors, fuses them into clinically relevant metrics, and stores the results for session review and export.
+Ataxia Monitor is an Android prototype for recording motion and distance signals from a wire-maze style measurement setup. It collects Android sensor events, converts them into a small domain model, derives live traversal metrics and persists both the session record and each sensor sample in Room.
 
-## Features
+The repository demonstrates the software pipeline around data capture and review. The current fusion logic is deliberately simple and should be treated as an engineering prototype, not as evidence that the resulting metrics are clinically validated measurements.
 
-- **Live monitoring dashboard**: View distance travelled along the wire, radial offset from the ring centre, angular velocity, and tremor magnitude in real time.
-- **Session management**: Start/stop recording runs with patient identifiers and clinician notes.
-- **Persistent storage**: Raw sensor readings and fused metrics are stored locally via Room for later analysis.
-- **Historical review**: Inspect previous sessions with automatically calculated summaries (total distance, average offset, peak tremor).
-- **Extensible architecture**: Modular repository, sensor collector, and fusion layers to support additional sensors or export formats.
+## System flow
 
-## Project structure
-
+```text
+Android sensors
+    |
+    v
+SensorCollector
+    |
+    v
+SensorSample
+    |
+    +--------------------+
+    |                    |
+    v                    v
+SensorFusionEngine   raw sample values
+    |                    |
+    v                    |
+TraversalMetrics         |
+    |                    |
+    +----------+---------+
+               |
+               v
+        SensorRepository
+               |
+        +------+------+
+        |             |
+        v             v
+   Room database   live StateFlow
+        |             |
+        v             v
+ session history   Compose UI
 ```
-app/
-├── src/main/java/com/clinic/ataxia/
-│   ├── AtaxiaMonitorApp.kt            # Application class and dependency container
-│   ├── MainActivity.kt                # Compose UI and interaction layer
-│   ├── data/
-│   │   ├── local/                     # Room database, entities, DAO relations
-│   │   ├── mapper/                    # Database ↔ domain converters
-│   │   ├── repository/                # SensorRepository orchestrating collection
-│   │   └── sensor/                    # SensorCollector + SensorFusionEngine
-│   ├── domain/model/                  # Core domain data classes
-│   └── ui/                            # ViewModel and UI state definitions
-└── src/test/java/...                  # Unit tests for fusion logic
+
+`SensorRepository` is the orchestration boundary. It starts and stops collection, resets the fusion state between sessions, persists readings on the IO dispatcher and exposes live/session state to the ViewModel.
+
+## Source map
+
+| Area | Responsibility |
+| --- | --- |
+| `AtaxiaMonitorApp.kt` | Creates the application-scoped dependency graph: Room database, `SensorManager`, collector, fusion engine and repository. |
+| `MainActivity.kt` | Compose presentation and interaction layer. It binds the UI to `MainViewModel` state and actions. |
+| `data/sensor/SensorCollector.kt` | Registers available Android sensors and converts callback events into a `Flow<SensorSample>`. |
+| `data/sensor/SensorFusionEngine.kt` | Stateful metric derivation for distance, offset, angular velocity and a smoothed acceleration-derived tremor proxy. |
+| `data/repository/SensorRepository.kt` | Session lifecycle, collection job ownership, persistence and live-state publication. |
+| `data/local/` | Room schema, DAOs and session/sample relationships. |
+| `data/mapper/` | Conversion between persisted Room objects and domain models. |
+| `domain/model/` | Sensor, metric and session types used outside persistence. |
+| `ui/MainViewModel.kt` | Combines repository streams with participant input into a single `MainUiState`. |
+
+## Sensor handling
+
+The collector requests:
+
+- gyroscope
+- accelerometer
+- rotation vector
+- time-of-flight on supported Android versions in the current implementation
+- proximity as the fallback path used by the current implementation when the time-of-flight branch is not selected
+
+Sensors that are unavailable are skipped rather than failing the complete stream.
+
+Each Android callback copies the sensor value array before emitting it. That is important because Android may reuse the framework-provided event buffer after the callback returns.
+
+`callbackFlow` owns the listener lifecycle. Every listener registered by a collection is unregistered in `awaitClose`, so cancelling the repository's collection job also releases the sensor subscriptions.
+
+## Fusion behaviour
+
+`SensorFusionEngine` is stateful. It must be reset at the beginning of each recording session.
+
+### Distance and radial offset
+
+The current implementation expects the first two values of a time-of-flight-domain sample to represent:
+
+1. along-path distance in millimetres
+2. radial offset in millimetres
+
+The first distance reading seeds the running total. Positive deltas are accumulated. A negative delta is treated as a sensor reset or new-lap condition and replaces the running total with the new reading.
+
+That behaviour is an explicit modelling assumption. If the physical sensor reports signed motion, wrap-around or calibrated absolute position differently, update the algorithm and its tests rather than changing the data interpretation silently.
+
+### Angular velocity
+
+The gyroscope metric is the Euclidean magnitude of the three angular-rate components:
+
+```text
+omega = sqrt(x^2 + y^2 + z^2)
 ```
 
-## Getting started
+The result therefore represents rotational-rate magnitude rather than orientation about a specific maze axis.
 
-1. **Android Studio**: Open the project folder (`Ataxia-Monitor`) in Android Studio Giraffe or newer with JDK 17.
-2. **Gradle wrapper**: If the Gradle wrapper is not yet generated, run `gradle wrapper` from within Android Studio or the terminal. Once created, you can build with `./gradlew assembleDebug`.
-3. **Run the app**: Deploy to a device running Android 8.0 (API 26) or later. Physical hardware is recommended to access motion sensors.
+### Acceleration-derived tremor proxy
 
-## Sensor assumptions
+The accelerometer path computes vector magnitude, subtracts standard Earth gravity and exponentially smooths the absolute residual:
 
-- **Time-of-flight**: A ToF sensor channel provides the along-wire distance (values[0]) and radial offset from the ring centre (values[1]) in millimetres. When the ToF sensor is unavailable, the app falls back to proximity readings.
-- **Gyroscope**: Angular velocity vector (rad/s) used to monitor ring rotation and tremor.
-- **Accelerometer**: Used to estimate tremor magnitude via a high-pass filter over gravity.
-- **Rotation vector**: Registered for potential orientation tracking and future fusion improvements.
+```text
+linear = abs(|a| - g)
+smoothed = 0.8 * previous + 0.2 * linear
+```
 
-The `SensorFusionEngine` consolidates readings into session metrics, applying simple filters and drift handling. Update this class if calibration constants change or more precise models are needed.
+The 0.8/0.2 weighting is a fixed smoothing choice in the prototype. It is not currently loaded from calibration data and should not be changed without updating the interpretation, verification data and tests.
 
-## Data export
+## Session lifecycle
 
-Session summaries and detailed readings reside in a Room database (`ataxia-monitor.db`). They can be exported by querying `sensor_samples` and `sessions` tables, or by adding an export workflow that consumes the repository API.
+`SensorRepository.startSession` intentionally ignores a second start request while a session is already active.
 
-## Testing
+Starting a session:
 
-Run JVM unit tests with:
+1. resets fusion state
+2. clears the live metric
+3. inserts a new Room session
+4. publishes the generated session ID
+5. starts sensor collection
+
+Stopping a session:
+
+1. clears the active session ID
+2. cancels the sensor collection job
+3. records the session end time
+4. clears the live metric
+
+Samples are persisted with both their raw value payload and the metrics produced at that point in the stream. This makes later analysis possible without needing to reconstruct the exact live fusion state from UI state.
+
+## Persistence
+
+The Room database is `ataxia-monitor.db` and currently uses schema version 1.
+
+`SensorSampleEntity` references `SessionEntity` through `session_id` with `ON DELETE CASCADE`. Deleting a session at the database level therefore removes its associated samples as part of the same relationship contract.
+
+Indexes on `session_id` and `timestamp` support the two principal lookup dimensions: readings belonging to one session and chronological sample access.
+
+The current database configuration has `exportSchema = false`. If migration history becomes important, enable schema export and add explicit migrations before incrementing the database version.
+
+## UI state
+
+`MainViewModel` combines five sources into `MainUiState`:
+
+- participant identifier input
+- notes input
+- live traversal metrics
+- stored session summaries
+- active session ID
+
+The active session ID is converted into the UI-facing `isSessionActive` flag. This keeps the Compose layer dependent on presentation state rather than repository implementation details.
+
+If the operator leaves the patient identifier blank, the ViewModel generates a timestamp-based placeholder. Treat that as a convenience for prototype use, not as a durable participant identity strategy.
+
+## Build and run
+
+Open the project in Android Studio with JDK 17. The repository targets Android devices and should be exercised on physical hardware when validating sensor behaviour.
+
+When a Gradle wrapper is present:
 
 ```bash
+./gradlew assembleDebug
 ./gradlew test
 ```
 
-The included tests cover the sensor fusion accumulator behaviour. Add instrumentation tests for end-to-end validation when hardware is available.
+The JVM tests should remain focused on deterministic fusion and mapping behaviour. Hardware availability, sensor timing and end-to-end collection require device or instrumentation validation.
 
-## Next steps
+## Verification priorities
 
-- Integrate Bluetooth/USB ingestion if the maze sensors stream data externally.
-- Add CSV/JSON export and secure data upload to the clinical data platform.
-- Harden calibration logic with configurable offsets and drift compensation.
-- Implement authentication and patient consent workflows if required by the study protocol.
+When changing the sensor pipeline, verify at least:
+
+- a session reset removes state from the previous session
+- missing sensors do not prevent other sensors from streaming
+- collector cancellation unregisters listeners
+- distance accumulation handles the documented reset rule
+- gyroscope magnitude remains dimensionally consistent with the input angular-rate units
+- the acceleration filter uses the intended weighting and gravity reference
+- persistence links each sample to the correct session
+- stopping a session prevents further samples from being associated with it
+- UI active/inactive state follows repository session state
+
+## Maintenance notes
+
+- Do not interpret `SensorType.TIME_OF_FLIGHT` as proof of a particular physical sensor interface. The collector-to-domain mapping is an adapter and should match the actual hardware path used by the project.
+- Rotation-vector events are collected but are not currently consumed by the fusion engine.
+- The repository writes every collected sample to Room. Higher sensor rates may require batching or another persistence strategy if profiling shows write pressure.
+- `applicationScope` intentionally outlives activities and ViewModels. Any work launched there must have an explicit lifecycle or cancellation owner.
+- Metric names shown in the UI should stay aligned with the algorithms that produce them. If an algorithm changes meaning, update the domain name and documentation rather than only changing its implementation.
+- Patient identifiers and notes are stored locally as plain Room fields in the current prototype. Any real deployment involving regulated or sensitive study data requires a separate security, consent, retention and access-control design.

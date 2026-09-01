@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/**
+ * Presentation-state adapter between [SensorRepository] and the Compose screen.
+ *
+ * Repository implementation details stay out of the UI: an active session ID is
+ * reduced to a Boolean, live metrics remain nullable until data arrives and the two
+ * editable participant fields are combined with repository streams into one state.
+ */
 class MainViewModel(
     private val repository: SensorRepository
 ) : ViewModel() {
@@ -19,6 +26,7 @@ class MainViewModel(
     private val patientId = MutableStateFlow("")
     private val notes = MutableStateFlow("")
 
+    /** Single observable state consumed by the screen. */
     val uiState: StateFlow<MainUiState> = combine(
         patientId,
         notes,
@@ -35,6 +43,8 @@ class MainViewModel(
         )
     }.stateIn(
         scope = viewModelScope,
+        // Eager collection keeps repository state reflected immediately when the
+        // ViewModel is alive, avoiding a second screen-specific lifecycle contract.
         started = SharingStarted.Eagerly,
         initialValue = MainUiState()
     )
@@ -47,8 +57,11 @@ class MainViewModel(
         notes.value = value
     }
 
+    /** Starts a repository session from the current form state. */
     fun startSession() {
         viewModelScope.launch {
+            // The generated identifier is only a prototype fallback. It prevents an
+            // empty database key but is not a substitute for a real participant-ID policy.
             val id = patientId.value.ifBlank { defaultPatientId() }
             repository.startSession(id, notes.value.ifBlank { null })
         }
@@ -64,6 +77,7 @@ class MainViewModel(
         "patient-${System.currentTimeMillis()}"
 }
 
+/** Immutable screen model derived from form input and repository state. */
 data class MainUiState(
     val patientId: String = "",
     val notes: String = "",

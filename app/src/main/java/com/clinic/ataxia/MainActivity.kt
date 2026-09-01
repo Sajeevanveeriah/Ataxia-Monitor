@@ -38,6 +38,13 @@ import com.clinic.ataxia.domain.model.TraversalSession
 import com.clinic.ataxia.ui.MainViewModel
 import com.clinic.ataxia.ui.theme.AtaxiaMonitorTheme
 
+/**
+ * Thin Android host for the Compose UI.
+ *
+ * The activity does not own sensor or database objects. It obtains the
+ * application-scoped repository and gives it to [MainViewModel], preserving the
+ * repository lifecycle across activity recreation.
+ */
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels {
@@ -60,9 +67,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/** Top-level screen that renders the complete [MainViewModel] state. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
+    // Lifecycle-aware collection stops unnecessary UI observation while the
+    // activity is not in an active lifecycle state.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -92,12 +102,12 @@ fun MainScreen(viewModel: MainViewModel) {
             )
 
             LiveMetricsCard(metrics = uiState.liveMetrics)
-
             SessionHistorySection(sessions = uiState.sessions)
         }
     }
 }
 
+/** Editable participant metadata captured before a session begins. */
 @Composable
 fun PatientInputSection(
     patientId: String,
@@ -127,6 +137,10 @@ fun PatientInputSection(
     }
 }
 
+/**
+ * Mutually exclusive recording controls. Repository state is authoritative, so
+ * disabling the invalid action here is a UI guard in addition to repository checks.
+ */
 @Composable
 fun SessionControls(
     isSessionActive: Boolean,
@@ -155,6 +169,7 @@ fun SessionControls(
     }
 }
 
+/** Shows the latest fused metric snapshot or placeholders before data arrives. */
 @Composable
 fun LiveMetricsCard(metrics: TraversalMetrics?) {
     Card(
@@ -188,6 +203,7 @@ fun LiveMetricsCard(metrics: TraversalMetrics?) {
     }
 }
 
+/** Shared label/value layout used by live and historical metric cards. */
 @Composable
 fun MetricRow(label: String, value: String) {
     Row(
@@ -199,6 +215,7 @@ fun MetricRow(label: String, value: String) {
     }
 }
 
+/** Renders Room-backed session summaries in newest-first order from the DAO. */
 @Composable
 fun SessionHistorySection(sessions: List<TraversalSession>) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -218,6 +235,7 @@ fun SessionHistorySection(sessions: List<TraversalSession>) {
     }
 }
 
+/** Human-readable summary of one persisted traversal session. */
 @Composable
 fun SessionCard(session: TraversalSession) {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -255,6 +273,7 @@ fun SessionCard(session: TraversalSession) {
 private fun formatTimestamp(value: Long): String =
     android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", value).toString()
 
+/** Locale-aware numeric formatting kept in one helper so units/precision stay consistent. */
 private fun formatNumber(value: Float, suffix: String = "", decimals: Int = 2): String {
     val pattern = buildString {
         append("%.")
