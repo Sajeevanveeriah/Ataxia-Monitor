@@ -22,6 +22,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Owns the recording-session lifecycle and is the boundary between sensor I/O,
+ * fusion, persistence and UI-facing state.
+ *
+ * Only one session may be active at a time. The repository also owns the sensor
+ * collection [Job], so stopping a session cancels hardware collection before the
+ * session is closed in Room.
+ */
 class SensorRepository(
     private val database: AtaxiaDatabase,
     private val sensorCollector: SensorCollector,
@@ -37,6 +45,8 @@ class SensorRepository(
     val liveMetrics: StateFlow<TraversalMetrics?> = _liveMetrics.asStateFlow()
     val activeSessionId: StateFlow<Long?> = _activeSessionId.asStateFlow()
 
+    // Eager sharing keeps session history current for the application-scoped UI
+    // even when no screen is temporarily collecting this StateFlow.
     val sessionSummaries: StateFlow<List<TraversalSession>> =
         database.sessionDao()
             .observeSessions()
@@ -48,9 +58,14 @@ class SensorRepository(
             .observeSession(sessionId)
             .map { it?.toDomain() }
 
+    /** Starts a recording if another session is not already active. */
     suspend fun startSession(patientId: String, notes: String?) {
+        // Treat repeated start taps as idempotent rather than creating overlapping
+        // database sessions that would compete for the same sensor stream.
         if (_activeSessionId.value != null) return
 
+        // Fusion state is session-scoped even though the engine instance is
+        // application-scoped, so reset before accepting new samples.
         fusionEngine.reset()
         _liveMetrics.value = null
         val sessionId = withContext(ioDispatcher) {
@@ -66,8 +81,12 @@ class SensorRepository(
         startCollecting(sessionId)
     }
 
+    /** Stops sensor collection and closes the current persisted session. */
     suspend fun stopSession() {
         val sessionId = _activeSessionId.value ?: return
+
+        // Publish inactive state before cancelling/persisting so the UI cannot
+        // start a second stop operation against the same session ID.
         _activeSessionId.value = null
         collectionJob?.cancel()
         collectionJob = null
@@ -78,10 +97,15 @@ class SensorRepository(
     }
 
     private fun startCollecting(sessionId: Long) {
+        // Defensive cancellation prevents a stale collection job from surviving a
+        // future lifecycle change that calls this method more than once.
         collectionJob?.cancel()
         collectionJob = scope.launch {
             sensorCollector.sensorSamples().collect { sample ->
                 val metrics = fusionEngine.process(sample)
+
+                // Persist the raw sample and the metric snapshot together before
+                // publishing it live, keeping stored and displayed state ordered.
                 persistSample(sample, metrics, sessionId)
                 _liveMetrics.value = metrics
             }
@@ -93,6 +117,8 @@ class SensorRepository(
         metrics: TraversalMetrics,
         sessionId: Long
     ) {
+        // Room writes are moved off the collector coroutine's default dispatcher
+        // so database I/O does not run on a UI-bound context supplied by a caller.
         withContext(ioDispatcher) {
             database.sensorSampleDao().insert(sample.toEntity(sessionId, metrics))
         }
