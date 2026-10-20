@@ -82,6 +82,18 @@ $env:VW_MTC1_SIMULATION_DIR = (Resolve-Path build\vw-mtc1).Path
 
 The scripts execute sequentially when updating the same `results.json`; concurrent writers are not supported. Analysis modules should be run with `python -m vw_mtc1.<module>` after installation. A wheel installed outside this checkout also needs `VW_MTC1_SIMULATION_DIR` for data-dependent commands.
 
+The five formerly timed-out cases completed with an 1800-second limit. Charger and
+touch-gap investigations, diagnostic netlists and remaining acceptance failures are
+documented in the [Rev01 verification record](docs/20261020-VW-MTC1-Verification-Rev01.md).
+To reproduce the additional diagnostic sweeps:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/investigate_analogue.py --output build\analogue-investigation --timeout 600
+```
+
+Simulation completion does not imply that every measurement or design target
+passes. The runner also rejects failed rows in stepped measurement tables.
+
 ## Android build and tests
 
 Use JDK 17, Android SDK platform 34 and build-tools 34.0.0. Set `JAVA_HOME` and `ANDROID_HOME` to those installations, or configure the SDK in Android Studio. The committed Gradle 8.2.1 wrapper verifies its distribution checksum.

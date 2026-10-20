@@ -11,9 +11,9 @@ def moving_average(t, y, win, dt=10e-9):
     return tu, np.convolve(yp, np.ones(n) / n, mode='valid')
 
 
-def low_intervals(t, out):
+def low_intervals(t, out, threshold=1.65):
     """Return sampled low spans, including pulses touching either trace edge."""
-    lo = out < 1.65
+    lo = out < threshold
     ed = np.diff(lo.astype(int))
     falls = list(t[1:][ed == 1])
     rises = list(t[1:][ed == -1])

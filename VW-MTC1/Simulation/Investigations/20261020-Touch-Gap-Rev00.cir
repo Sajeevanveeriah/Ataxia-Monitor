@@ -1,0 +1,27 @@
+* Diagnostic only: two 20ms contacts with a swept release gap.
+* Original RS=10k, RPU=360k; compare CF=27n against a faster 15n control.
+* Fixed 1.7V/1.0V thresholds are assumptions, not a qualified TI corner model.
+* CC=0 uses a negligible 1aF capacitor as the no-interference control.
+* ESD clamps and physical wiring parasitics remain outside this model.
+.param CASE=0 PH=0 CC=0
+.param CF={if(CASE<5,15n,27n)}
+.param GAP={table(CASE-5*floor(CASE/5),0,5m,1,10m,2,15m,3,20m,4,25m)}
+.step param CASE 0 9 1
+.step param PH 0 330 30
+.step param CC list 0 50p 100p
+V33 vdd 0 3.3
+Vmains mains 0 SINE(0 {230*sqrt(2)} 50 0 0 {PH})
+Cc mains pin {max(CC,1e-18)}
+Cstray pin 0 30p
+Scontact pin 0 contact 0 SCON
+Vcontact contact 0 PWL(0 0 140m 0 140.001m 1 160m 1 160.001m 0
++ {160m+GAP} 0 {160.001m+GAP} 1 {180m+GAP} 1 {180.001m+GAP} 0)
+.model SCON SW(Ron=1 Roff=1e12 Vt=0.5 Vh=0)
+RS pin in 10k
+RPU vdd in 360k
+Cfilter in 0 {CF}
+A7 in 0 0 0 0 0 out 0 SCHMITT Vt=1.35 Vh=0.35 Vhigh=3.3 Vlow=0 Trise=2n Tfall=2n
+.save V(in) V(out) V(pin) I(Scontact)
+.options plotwinsize=0
+.tran 0 270m 0 20u
+.end
