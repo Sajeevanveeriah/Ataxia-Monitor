@@ -1,7 +1,7 @@
 """an_sim05.py - post-process SIM05 (maze touch input)."""
 import numpy as np
-from common import *
-from ltraw import RawRead
+from vw_mtc1.common import *
+from vw_mtc1.ltraw import RawRead
 import matplotlib.pyplot as plt
 
 r = RawRead(lt('sim05_touch_input.raw'))
@@ -19,16 +19,7 @@ EVENTS = [  # name, window start, window end, contact start, expected pulses
 ]
 
 
-def lows(t, out):
-    lo = out < 1.65
-    ed = np.diff(lo.astype(int))
-    falls = list(t[1:][ed == 1])
-    rises = list(t[1:][ed == -1])
-    if lo[0]:
-        falls = [t[0]] + falls
-    if len(rises) < len(falls):
-        rises.append(t[-1])
-    return list(zip(falls, rises))
+from vw_mtc1.waveform import low_intervals as lows
 
 
 rows, traces = {}, {}

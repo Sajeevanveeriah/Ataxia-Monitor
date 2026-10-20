@@ -1,7 +1,7 @@
 """an_sim02.py - post-process SIM02 (LTC4054 charger) and SIM02b (hot-plug)."""
 import numpy as np
-from common import *
-from ltraw import RawRead, parse_meas
+from vw_mtc1.common import *
+from vw_mtc1.ltraw import RawRead, parse_meas
 import matplotlib.pyplot as plt
 
 res = {}

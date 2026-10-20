@@ -6,12 +6,13 @@ Supports transient (time float64, others float32 or float64 when the
 layouts.
 
 Usage:
-    from ltraw import RawRead
+    from vw_mtc1.ltraw import RawRead
     r = RawRead('sim01.raw')
     t = r['time']; v = r['V(out)']
     runs = r.step_slices()   # list of slice objects, one per .step run
 """
 import numpy as np
+from vw_mtc1.lttext import decode_text, text_encoding
 
 
 class RawRead:
@@ -20,21 +21,18 @@ class RawRead:
         with open(path, 'rb') as f:
             data = f.read()
         # Header encoding: UTF-16LE (LTspice default) or ASCII.
-        if data[1:2] == b'\x00':
-            enc, cw = 'utf-16-le', 2
-        else:
-            enc, cw = 'latin-1', 1
+        enc = text_encoding(data)
         # find the 'Binary:' or 'Values:' marker
         for marker in ('Binary:\n', 'Values:\n', 'Binary:\r\n', 'Values:\r\n'):
-            m = marker.encode(enc)
+            m = marker.encode('utf-8' if enc == 'utf-8-sig' else enc)
             idx = data.find(m)
             if idx >= 0:
                 self.binary = marker.startswith('Binary')
-                hdr = data[:idx].decode(enc)
+                hdr = decode_text(data[:idx])
                 body = data[idx + len(m):]
                 break
         else:
-            raise ValueError('No Binary:/Values: marker in ' + path)
+            raise ValueError(f'No Binary:/Values: marker in {path}')
         self.header = hdr
         self.meta = {}
         self.names = []
@@ -59,6 +57,8 @@ class RawRead:
         nvar = int(self.meta['No. Variables'])
         npts = int(self.meta['No. Points'])
         self.nvar, self.npts = nvar, npts
+        if nvar < 1 or npts < 0 or len(self.names) != nvar:
+            raise ValueError(f'Invalid variable/point counts in {path}')
         self.is_complex = 'complex' in flags
         self.stepped = 'stepped' in flags
         plotname = self.meta.get('Plotname', '').lower()
@@ -67,9 +67,15 @@ class RawRead:
             self._read_binary(body, nvar, npts, flags)
         else:
             self._read_ascii(body.decode(enc), nvar, npts)
+        if self.is_tran:
+            # Both binary and ASCII files can contain negative time flags.
+            self.data[:, 0] = np.abs(self.data[:, 0])
         self._lower = {n.lower(): k for k, n in enumerate(self.names)}
 
     def _read_binary(self, body, nvar, npts, flags):
+        point_size = nvar * 16 if self.is_complex else (nvar * 8 if 'double' in flags else 8 + 4 * (nvar - 1))
+        if len(body) < npts * point_size:
+            raise ValueError(f'Truncated binary waveform in {self.path}')
         if self.is_complex:
             arr = np.frombuffer(body[:npts * nvar * 16], dtype='<c16')
             arr = arr.reshape(npts, nvar) if 'fastaccess' not in flags \
@@ -97,12 +103,11 @@ class RawRead:
                 for k in range(1, nvar):
                     out[:, k] = rec['v%d' % k]
                 self.data = out
-        if self.is_tran:
-            # LTspice may flag points with a negative time sign; use abs
-            self.data[:, 0] = np.abs(self.data[:, 0])
 
     def _read_ascii(self, txt, nvar, npts):
         tok = txt.split()
+        if len(tok) != npts * (nvar + 1):
+            raise ValueError(f'Invalid ASCII waveform length in {self.path}')
         vals = []
         p = 0
         for _ in range(npts):
@@ -116,7 +121,7 @@ class RawRead:
                 else:
                     row.append(float(s))
             vals.append(row)
-        self.data = np.array(vals)
+        self.data = np.array(vals, dtype=complex if self.is_complex else float).reshape(npts, nvar)
 
     def __getitem__(self, name):
         k = self._lower.get(name.lower())
@@ -131,18 +136,21 @@ class RawRead:
     def step_slices(self):
         """Return list of slices, one per .step run (detected by axis reset)."""
         x = np.real(self.data[:, 0])
-        if self.is_complex:
-            br = np.where(np.diff(x) < 0)[0] + 1
-        else:
-            br = np.where(np.diff(x) < 0)[0] + 1
+        if not len(x):
+            return []
+        br = np.where(np.diff(x) < 0)[0] + 1
         edges = [0] + list(br) + [len(x)]
         return [slice(edges[i], edges[i + 1]) for i in range(len(edges) - 1)]
 
 
 def resample(t, y, dt, t0=None, t1=None):
     """Linear resample onto a uniform grid (for FFT / rms on compressed data)."""
+    t, y = _samples(t, y)
     t0 = t[0] if t0 is None else t0
     t1 = t[-1] if t1 is None else t1
+    _interval(t, t0, t1)
+    if not np.isfinite(dt) or dt <= 0:
+        raise ValueError('Sampling interval must be finite and positive')
     tu = np.arange(t0, t1, dt)
     return tu, np.interp(tu, t, y)
 
@@ -154,16 +162,34 @@ def window(t, y, t0, t1):
 
 def tavg(t, y, t0, t1):
     """Time-weighted average of y over [t0, t1] (trapezoidal)."""
-    tt, yy = window(t, y, t0, t1)
-    return np.trapezoid(yy, tt) / (tt[-1] - tt[0])
+    t, y = _samples(t, y)
+    _interval(t, t0, t1)
+    inside = (t > t0) & (t < t1)
+    tt = np.concatenate(([t0], t[inside], [t1]))
+    yy = np.interp(tt, t, y)
+    return np.trapezoid(yy, tt) / (t1 - t0)
+
+
+def _samples(t, y):
+    t, y = np.asarray(t, dtype=float), np.asarray(y)
+    if t.ndim != 1 or y.ndim != 1 or len(t) != len(y) or len(t) < 2:
+        raise ValueError('Expected matching one-dimensional arrays with at least two samples')
+    if not np.all(np.isfinite(t)) or not np.all(np.isfinite(y)) or np.any(np.diff(t) <= 0):
+        raise ValueError('Samples must be finite with a strictly increasing time axis; split stepped runs first')
+    return t, y
+
+
+def _interval(t, t0, t1):
+    if not np.isfinite(t0) or not np.isfinite(t1) or not t[0] <= t0 < t1 <= t[-1]:
+        raise ValueError('Window must have positive duration and lie within the sampled time range')
 
 
 def parse_meas(logpath):
     """Parse .meas results from an LTspice .log into a dict (lower-case keys)."""
     import re
     out = {}
-    raw = open(logpath, 'rb').read()
-    txt = raw.decode('utf-16-le') if raw[1:2] == b'\x00' else raw.decode('latin-1')
+    with open(logpath, 'rb') as stream:
+        txt = decode_text(stream.read())
     for ln in txt.replace('\r', '').split('\n'):
         ma = re.match(r'^\s*([A-Za-z_][\w]*)\s*:.*\sAT\s+([-+0-9.eE]+)\s*$', ln)
         if ma:  # WHEN-type result: "name: V(x)=val AT time"

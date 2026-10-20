@@ -1,14 +1,15 @@
 """common.py - shared paths, plot style and results.json helper."""
-import os, json, sys
+import os, json, tempfile
+from pathlib import Path
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+ROOT = os.path.abspath(os.environ.get('VW_MTC1_SIMULATION_DIR',
+                       os.path.join(os.path.dirname(__file__), '..')))
 LT = os.path.join(ROOT, 'LTspice')
 PLOTS = os.path.join(ROOT, 'Plots')
 RESULTS = os.path.join(ROOT, 'results.json')
-sys.path.insert(0, os.path.dirname(__file__))
 
 plt.rcParams.update({
     'figure.facecolor': 'white', 'axes.facecolor': 'white',
@@ -24,10 +25,13 @@ def lt(name):
 
 
 def savefig(fig, name):
-    fig.tight_layout()
     p = os.path.join(PLOTS, name)
-    fig.savefig(p, dpi=150, facecolor='white')
-    plt.close(fig)
+    try:
+        os.makedirs(PLOTS, exist_ok=True)
+        fig.tight_layout()
+        fig.savefig(p, dpi=150, facecolor='white')
+    finally:
+        plt.close(fig)
     print('wrote', p)
 
 
@@ -47,9 +51,21 @@ def check(value, units, limit, passed, note=None):
 def update_results(sim_key, payload):
     data = {}
     if os.path.exists(RESULTS):
-        with open(RESULTS) as f:
+        with open(RESULTS, encoding='utf-8') as f:
             data = json.load(f)
     data[sim_key] = payload
-    with open(RESULTS, 'w') as f:
-        json.dump(data, f, indent=2)
+    # Serialise first, then replace atomically. A failed serialisation or write
+    # must not truncate the previous simulation evidence.
+    payload = json.dumps(data, indent=2, allow_nan=False)
+    target = Path(RESULTS)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8',
+                                         dir=target.parent, delete=False) as f:
+            temporary = Path(f.name)
+            f.write(payload)
+        os.replace(temporary, target)
+    finally:
+        if temporary is not None and temporary.exists():
+            temporary.unlink()
     print('updated results.json:', sim_key)

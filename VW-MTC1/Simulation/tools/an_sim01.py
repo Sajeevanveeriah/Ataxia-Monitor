@@ -1,8 +1,8 @@
 """an_sim01.py - post-process SIM01 (LTC3536 3.3 V buck-boost)."""
 import sys
 import numpy as np
-from common import *
-from ltraw import RawRead, parse_meas
+from vw_mtc1.common import *
+from vw_mtc1.ltraw import RawRead, parse_meas
 import matplotlib.pyplot as plt
 
 TSW = 1 / 1.2e6
@@ -10,13 +10,7 @@ tag = sys.argv[1] if len(sys.argv) > 1 else ''   # '' = proposed values
 res = {}
 
 
-def movavg(t, y, win, dt=10e-9):
-    tu = np.arange(t[0], t[-1], dt)
-    yu = np.interp(tu, t, y)
-    n = max(1, int(round(win / dt)))
-    k = np.ones(n) / n
-    yp = np.pad(yu, (n // 2, n - 1 - n // 2), mode='edge')  # avoid zero roll-off at the ends
-    return tu, np.convolve(yp, k, mode='valid')
+from vw_mtc1.waveform import moving_average as movavg
 
 
 # ---------- start-up ----------
@@ -122,7 +116,7 @@ mz = parse_meas(lt('sim01c_buckboost_ripple_eff.log'))
 r = RawRead(lt('sim01c_buckboost_ripple_eff.raw'))
 loads = [0.05, 0.3, 0.6]
 # parse stepped .meas tables from the log
-from runlt import read_log
+from vw_mtc1.runlt import read_log
 txt = read_log(lt('sim01c_buckboost_ripple_eff.log')).replace('\r', '')
 
 

@@ -1,8 +1,8 @@
 """an_sim06_07.py - post-process SIM06 (haptic ERM) and SIM07 (buzzer)."""
 import numpy as np
-from common import *
-from ltraw import RawRead, parse_meas
-from runlt import read_log
+from vw_mtc1.common import *
+from vw_mtc1.ltraw import RawRead, parse_meas
+from vw_mtc1.runlt import read_log
 import matplotlib.pyplot as plt
 
 

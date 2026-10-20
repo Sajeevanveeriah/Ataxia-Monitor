@@ -1,7 +1,7 @@
 """an_sim04.py - post-process SIM04 (Hall analogue front end)."""
 import numpy as np
-from common import *
-from ltraw import RawRead
+from vw_mtc1.common import *
+from vw_mtc1.ltraw import RawRead
 import matplotlib.pyplot as plt
 
 res = {}

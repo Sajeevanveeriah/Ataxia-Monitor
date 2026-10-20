@@ -1,21 +1,20 @@
 """an_sim03.py - post-process SIM03a/b (power path unplug/replug) and SIM03c."""
 import os
 import numpy as np
-from common import *
-from ltraw import RawRead, parse_meas
-from runlt import read_log
+from vw_mtc1.common import *
+from vw_mtc1.ltraw import RawRead, parse_meas
+from vw_mtc1.runlt import read_log
 import matplotlib.pyplot as plt
 
 TSW = 1 / 1.2e6
 res = {}
 
 
+from vw_mtc1.waveform import moving_average
+
+
 def movavg(t, y, win, dt=20e-9):
-    tu = np.arange(t[0], t[-1], dt)
-    yu = np.interp(tu, t, y)
-    n = max(1, int(round(win / dt)))
-    yp = np.pad(yu, (n // 2, n - 1 - n // 2), mode='edge')  # avoid zero roll-off at the ends
-    return tu, np.convolve(yp, np.ones(n) / n, mode='valid')
+    return moving_average(t, y, win, dt)
 
 
 for tag, fn in (('proposed', 'sim03a_powerpath_unplug_proposed'), ('rejected_bat54_attempt', 'sim03b_powerpath_unplug_revised'),
