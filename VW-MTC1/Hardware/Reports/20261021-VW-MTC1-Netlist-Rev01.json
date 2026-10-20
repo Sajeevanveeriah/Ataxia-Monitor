@@ -1,0 +1,14 @@
+{
+  "tool": "KiCad 10.0.6 native XML netlist export",
+  "normalisation": "Local absolute source/library prefixes replaced with repository paths or KICAD10_SYMBOL_DIR; connectivity unchanged",
+  "source_sha256": {
+    "VW-MTC1/Hardware/KiCad/MazeIO.kicad_sch": "251911fe55803c4a067c84816f6d1edaed43ca4c62b569bc96d68dbc44dbc1cf",
+    "VW-MTC1/Hardware/KiCad/MCU.kicad_sch": "797de36e5c7a2741cf87ae44ef2df69f64f243c59fab49b936ffd8c17df6fd6c",
+    "VW-MTC1/Hardware/KiCad/Power.kicad_sch": "54341a813b3528646efc295eee316f2813ae83d693c0c969303c0a2dcd3f07b4",
+    "VW-MTC1/Hardware/KiCad/Sensing.kicad_sch": "7a1554816074e204bd4995c1762f9c09df3d124f82e88ff0d1e11e84078e630d",
+    "VW-MTC1/Hardware/KiCad/VW-MTC1.kicad_sch": "5066c7cfd03d25f493be72ea4449a3e0a7e44330e33431b96e6c3277f2a9e7e9",
+    "VW-MTC1/Hardware/KiCad/Voltwyn.kicad_sym": "97789c2ba61498b861506ba12bd3826e856817bb21fab67e44e6ee6a58cd8431"
+  },
+  "netlist_sha256": "ed9b97a9eb263fdd823b0a868a34013994c37f05dbccf2ce7526fe021fa12d59",
+  "source_hash_normalisation": "LF"
+}

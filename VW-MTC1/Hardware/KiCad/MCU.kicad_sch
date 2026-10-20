@@ -6,8 +6,8 @@
 	(paper "A3")
 	(title_block
 		(title "MCU: ESP32-S3, UI, IMU, storage, expansion")
-		(date "2026-10-19")
-		(rev "A")
+		(date "2026-10-21")
+		(rev "B")
 		(company "Voltwyn")
 		(comment 1 "VW-MTC1 MazeTrack Controller - MCU")
 		(comment 2 "Designed by S. Veeriah. Generated from design.py netlist spec")
@@ -14387,7 +14387,7 @@
 		)
 		(uuid "b28e2237-70bd-5e6e-8c4a-c3c4b7777878")
 	)
-	(global_label "TOUCH_FINISH"
+	(global_label "TOUCH_BUSY"
 		(shape passive)
 		(at 74.93 64.77 0)
 		(fields_autoplaced yes)
@@ -14663,7 +14663,7 @@
 		)
 		(uuid "f3c11a35-f057-5495-aa29-19962bbc4459")
 	)
-	(global_label "TOUCH_WIRE"
+	(global_label "TOUCH_EXC"
 		(shape passive)
 		(at 74.93 82.55 0)
 		(fields_autoplaced yes)
@@ -14696,7 +14696,7 @@
 		)
 		(uuid "597a3eec-9fbd-570e-a70f-3e238ee16249")
 	)
-	(global_label "TOUCH_START"
+	(global_label "TOUCH_CS"
 		(shape passive)
 		(at 74.93 85.09 0)
 		(fields_autoplaced yes)

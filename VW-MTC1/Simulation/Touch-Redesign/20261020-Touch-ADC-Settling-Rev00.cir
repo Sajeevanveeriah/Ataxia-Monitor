@@ -1,0 +1,27 @@
+* Candidate MCP6004 follower driving the MCP3204 sampler.
+* Generic bounded model, NOT a manufacturer-validated MCP6004 macro-model.
+* DC gain 88 dB minimum class; GBW 0.5/1 MHz and slew 0.3 V/us envelopes.
+* Sampler 30 pF / 2k intentionally above the datasheet's 20 pF / 1k typical.
+* Input comes from a 50k Thevenin source with 20 pF board capacitance.
+.lib UniversalOpAmp2.lib
+.step param SIG list 0.15 0.8 1.65 2.6 3.33
+.step param PRE list 0 3.48
+.step param GBW list 500k 1Meg
+Vdd vdd 0 3.48
+Vsignal sig 0 {SIG}
+Rsource sig sense 50k
+Cboard sense 0 20p
+Xbuffer sense buf vdd 0 buf level2 Avol=25119 GBW={GBW} Slew=0.3Meg Ilimit=6m Rail=25m Vos=0
+Vpre pre 0 {PRE}
+Sreset pre sample reset 0 SWRESET
+Ssample buf sample acquire 0 SWSAMPLE
+Csample sample 0 30p
+Vreset reset 0 PWL(0 1 49.99u 1 50u 0)
+Vacquire acquire 0 PWL(0 0 50u 0 50.01u 1 51.51u 1 51.52u 0)
+.model SWRESET SW(Ron=1 Roff=1T Vt=.5 Vh=0)
+.model SWSAMPLE SW(Ron=2k Roff=1T Vt=.5 Vh=0)
+.save V(buf) V(sample)
+.options plotwinsize=0
+.tran 0 60u 0 2n
+.meas TRAN error FIND abs(V(buf)-V(sample)) AT 51.5u
+.end

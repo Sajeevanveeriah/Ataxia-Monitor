@@ -457,6 +457,22 @@
       {
         "netclass": "USB",
         "pattern": "USB_D_N"
+      },
+      {
+        "netclass": "Analog",
+        "pattern": "TCH_*"
+      },
+      {
+        "netclass": "Analog",
+        "pattern": "MAZE_*"
+      },
+      {
+        "netclass": "Analog",
+        "pattern": "+3V3_TOUCH"
+      },
+      {
+        "netclass": "Analog",
+        "pattern": "+2V5_TOUCH"
       }
     ]
   },

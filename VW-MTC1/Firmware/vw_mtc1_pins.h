@@ -1,5 +1,6 @@
-// VW-MTC1 MazeTrack Controller - Rev A - ESP32-S3-WROOM-1 (N8R2) pin map
-// Source of truth: Hardware/KiCad schematic (MCU sheet). Generated 2026-10-19.
+// VW-MTC1 MazeTrack Controller - Rev B - ESP32-S3-WROOM-1 (N8R2) pin map
+// Source of truth: Hardware/KiCad schematic (MCU and MazeIO sheets).
+// Rev B touch firmware MUST NOT be flashed onto an unmodified Rev A board.
 // Module variant: use N8 / N8R2 (quad PSRAM). Octal-PSRAM variants (R8) reserve GPIO35-37,
 // which this board leaves unconnected anyway.
 #pragma once
@@ -26,10 +27,12 @@
 #define PIN_SCL            9
 #define PIN_IMU_INT1      15
 
-// ---- Maze contact inputs (Schmitt-buffered, LOW = ring touching) ----
-#define PIN_TOUCH_WIRE    41   // ring touched the maze wire (error event)
-#define PIN_TOUCH_START   42   // ring resting on start pad
-#define PIN_TOUCH_FINISH  21   // ring reached finish pad
+// ---- Rev B synchronous touch acquisition (ADS8344NB on shared SPI) ----
+#define PIN_TOUCH_EXC     41   // 1 kHz hardware carrier, 50% duty
+#define PIN_TOUCH_CS      42   // ADS8344NB chip select, active LOW
+#define PIN_TOUCH_BUSY    21   // ADS8344NB BUSY, diagnostic input
+// CH0 = wire, CH1 = start, CH2 = finish, CH3 = unloaded reference.
+// These are analogue measurements; GPIO levels are not contact states.
 
 // ---- microSD (SDMMC 1-bit mode; D1-D3 pulled up) ----
 #define PIN_SD_CLK        39

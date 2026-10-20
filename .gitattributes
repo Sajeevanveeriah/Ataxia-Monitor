@@ -10,8 +10,14 @@
 *.kicad_pro -text
 *.kicad_dru -text
 *.csv -text
+VW-MTC1/Hardware/Reports/*.xml -text
+VW-MTC1/Hardware/Reports/*.json -text
+VW-MTC1/Simulation/Touch-Redesign/*.json -text
 
 *.py text eol=lf
+*.h text eol=lf
+*.cpp text eol=lf
+VW-MTC1/Simulation/Touch-Redesign/*.cir text eol=lf
 *.sh text eol=lf
 gradlew text eol=lf
 *.bat text eol=crlf
