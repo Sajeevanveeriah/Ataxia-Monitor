@@ -1,0 +1,27 @@
+{
+  "model": "LTspice 26.1.1; bounded buffer surrogate, sampled MCP3204 error envelope",
+  "decoder_sha256": "eefc9568a1d656cc752337b5f6162021d4d9bdeafafde32fbe3fcb215952594a",
+  "simulation_cases": 1152,
+  "channel_replays": 10368,
+  "functional_failures": 0,
+  "max_short_onset_delay_ms": 2.529,
+  "max_release_delay_ms": 2.156999999999992,
+  "max_second_onset_delay_ms": 2.031000000000005,
+  "adc_acquisition_cases": 20,
+  "adc_acquisition_max_error_uV": 107.15157543874157,
+  "adc_acquisition_pass": true,
+  "original_board_capacitor_peak_uA": 1054.4370161369443,
+  "board_only_terminal_peak_uA": 8.787686056166422,
+  "all_sources_terminal_peak_uA": 40.869228541851044,
+  "external_contact_peak_uA_board_sources_only": 959639.4300460815,
+  "current_boundary": "unresolved",
+  "current_limit_pass": null,
+  "current_acceptance": "PENDING measurement-boundary clarification",
+  "source_sha256": {
+    "VW-MTC1/Firmware/touch_decoder.h": "eefc9568a1d656cc752337b5f6162021d4d9bdeafafde32fbe3fcb215952594a",
+    "VW-MTC1/Simulation/tools/touch.py": "252ad0e4d229f3713cf342cdd6837e3de38986b5ac9ac77527ebaf63d1edf19c",
+    "scripts/verify_touch.py": "f3a1e016af97688c4786b68cf4f2ba895209544397ec477712e7ee11b5243136",
+    "tests/touch_decoder_test.cpp": "132e2263580945364f4fe2185955f9d82067222eb2496871e37fd662beb97383"
+  },
+  "scope": "Candidate only. KiCad retains Rev A. Current boundary unresolved."
+}

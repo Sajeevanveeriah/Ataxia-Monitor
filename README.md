@@ -7,7 +7,7 @@ This repository contains the VW-MTC1 MazeTrack controller design, its LTspice an
 | Path | Contents |
 | --- | --- |
 | `VW-MTC1/Hardware/` | KiCad 10 sources, fabrication exports and archived ERC/DRC reports |
-| `VW-MTC1/Firmware/` | ESP32-S3 pin-map header; no flashable firmware application yet |
+| `VW-MTC1/Firmware/` | Rev A pin map and candidate portable touch decoder; no flashable firmware application yet |
 | `VW-MTC1/Simulation/` | LTspice circuits, archived results/plots and Python analysis tools |
 | `VW-MTC1/Docs/` | Original Rev00 design report, datasheet and images |
 | `app/` | Android app, local JVM tests and [app documentation](app/README.md) |
@@ -109,5 +109,12 @@ The app preserves raw phone proximity readings in their own sensor type. They ar
 ## Automated verification
 
 The PR workflow builds and tests the Python tools on Windows and Linux, checks the pin-map header on Linux, and builds/tests/lints Android on Linux. It does not flash hardware, run physical measurements or regenerate fabrication exports.
+
+The touch redesign is a **candidate**, with a verified model for 5 ms gap detection
+and an unresolved current measurement boundary. The KiCad circuit remains Rev A.
+See the [touch design note](docs/20261020-Touch-Redesign-Rev00.md) for the
+10,368 decoder replays, current results and remaining hardware work. The new
+Rev01 BOM corrects the existing Rev A fit-status grouping; it is not a touch
+redesign BOM.
 
 The original thesis and previously delivered package ZIP remain local and are excluded from Git. The original Rev00 package files under `VW-MTC1/` remain available alongside the maintained source tools.

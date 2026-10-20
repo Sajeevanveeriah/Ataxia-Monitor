@@ -19,4 +19,8 @@ The table and status above describe the original Rev00 design package. The maint
 Python tools now have a package build and hardware-free regression suite. See the
 [repository build instructions](../README.md) and
 [latest verification record](../docs/20261020-VW-MTC1-Verification-Rev01.md).
-`Firmware/` still contains a pin-map header only, not a flashable firmware application.
+`Firmware/` contains the Rev A pin map and a portable C++ decoder for the
+[touch candidate](../docs/20261020-Touch-Redesign-Rev00.md), but no flashable
+firmware application. The candidate has not been applied to KiCad while its
+current measurement boundary is unresolved. The Rev01 BOM corrects DNP grouping
+in the existing Rev A design; it is not the touch-redesign BOM.

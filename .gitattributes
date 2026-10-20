@@ -12,6 +12,9 @@
 *.csv -text
 
 *.py text eol=lf
+*.h text eol=lf
+*.cpp text eol=lf
+VW-MTC1/Simulation/Touch-Redesign/*.cir text eol=lf
 *.sh text eol=lf
 gradlew text eol=lf
 *.bat text eol=crlf
