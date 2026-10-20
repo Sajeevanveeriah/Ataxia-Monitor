@@ -11,5 +11,6 @@ enum class SensorType {
     GYROSCOPE,
     ACCELEROMETER,
     ROTATION_VECTOR,
+    PROXIMITY,
     UNKNOWN
 }

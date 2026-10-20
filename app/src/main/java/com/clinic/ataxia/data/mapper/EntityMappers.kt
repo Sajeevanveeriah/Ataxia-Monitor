@@ -38,18 +38,7 @@ fun SessionWithSummary.toDomain(): TraversalSession =
     )
 
 fun SessionWithReadings.toDomain(): TraversalSession =
-    TraversalSession(
-        id = session.id,
-        patientId = session.patientId,
-        startedAt = session.startedAt,
-        endedAt = session.endedAt,
-        notes = session.notes,
-        metrics = SessionMetricsSummary(
-            totalDistanceMillimeters = samples.sumOf { it.distanceMillimeters.toDouble() }.toFloat(),
-            averageOffsetMillimeters = if (samples.isEmpty()) 0f else samples.map { it.offsetMillimeters }.average().toFloat(),
-            peakTremorMagnitude = samples.maxOfOrNull { it.tremorMagnitude } ?: 0f
-        )
-    )
+    SessionWithSummary(session, samples).toDomain()
 
 fun SensorSample.toEntity(
     sessionId: Long,
