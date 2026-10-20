@@ -28,7 +28,11 @@ def test_stale_log_is_failure(simulation):
     assert runlt.run(circuit)[0] != 0
 
 
-@pytest.mark.parametrize("message", ["Error: unknown device", "Singular matrix", "Time step too small", 'Measurement "t90" FAIL\'ed'])
+@pytest.mark.parametrize("message", [
+    "Error: unknown device", "Singular matrix", "Time step too small",
+    'Measurement "t90" FAIL\'ed',
+    "Measurement: t_on\n  step  time\n     1  0.002\n     4  failed\n",
+])
 def test_log_failures_are_not_success(simulation, message):
     circuit, process = simulation
     def finish(**kwargs):

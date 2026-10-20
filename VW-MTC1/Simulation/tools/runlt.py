@@ -67,7 +67,8 @@ def run(cir, timeout=300, executable=None):
     txt = read_log(log) if current_log else ''
     fresh = current_log is not None and current_log != previous_log and bool(txt.strip())
     bad = not fresh or bool(re.search(
-        r'^\s*(?:fatal\s+)?error\b|singular matrix|time step too small|^\s*Measurement\b.*FAIL',
+        r'^\s*(?:fatal\s+)?error\b|singular matrix|time step too small|'
+        r'^\s*Measurement\b.*FAIL|^\s*\d+\s+failed\b',
         txt, re.IGNORECASE | re.MULTILINE))
     print('%s rc=%s %.1fs %s' % (os.path.basename(cir), rc, dt, 'LOG-ERROR' if bad else 'ok'))
     return (rc if rc else int(bad)), txt
