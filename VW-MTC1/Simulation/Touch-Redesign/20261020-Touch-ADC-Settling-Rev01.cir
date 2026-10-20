@@ -1,0 +1,27 @@
+* OPA4323 follower / ADS8344NB acquisition.
+* Bounded generic amplifier model, not a manufacturer macro-model.
+* 5 MHz GBW and 10 V/us stress versus published 20 MHz / 33 V/us typical.
+* ADS8344 input 25 pF typical; use 40 pF and a conservative 2k switch.
+* 4.5 acquisition clocks at 2 MHz = 2.25 us.
+.lib UniversalOpAmp2.lib
+.step param VDD list 3.15 3.6
+.step param FRACTION list 0.02 0.25 0.45 0.65 0.9
+.step param PRE list 0 1
+Vdd vdd 0 {VDD}
+Vsignal sig 0 {FRACTION*VDD}
+Rsource sig sense 50k
+Cboard sense 0 300p
+Xbuffer sense buf vdd 0 buf level2 Avol=100k GBW=5Meg Slew=10Meg Ilimit=10m Rail=55m Vos=0
+Vpre pre 0 {PRE*VDD}
+Sreset pre sample reset 0 SWRESET
+Ssample buf sample acquire 0 SWSAMPLE
+Csample sample 0 40p
+Vreset reset 0 PWL(0 1 49.99u 1 50u 0)
+Vacquire acquire 0 PWL(0 0 50u 0 50.01u 1 52.26u 1 52.27u 0)
+.model SWRESET SW(Ron=1 Roff=1T Vt=.5 Vh=0)
+.model SWSAMPLE SW(Ron=2k Roff=1T Vt=.5 Vh=0)
+.save V(buf) V(sample)
+.options plotwinsize=0
+.tran 0 60u 0 2n
+.meas tran error FIND abs(V(buf)-V(sample)) AT 52.25u
+.end

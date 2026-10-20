@@ -7,7 +7,7 @@ from vw_mtc1.touch import event_metrics
 def stimulus():
     t = np.arange(.0004, .115, .0005)
     state = np.zeros(len(t), dtype=int)
-    for start, stop in ((.02, .022), (.05, .07), (.075, .095)):
+    for start, stop in ((.02, .022), (.03, .032), (.037, .039), (.05, .07), (.075, .095)):
         state[(t >= start + .0015) & (t < stop + .0015)] = 7
     valid = t >= .005
     return t, valid, state
@@ -18,6 +18,7 @@ def test_separate_contacts_all_three_channels():
         result = event_metrics(*stimulus(), channel)
         assert result["gap_pair_pass"]
         assert result["short_contact_pass"]
+        assert result["short_pair_pass"]
         assert result["release_delay_ms"] < 5
 
 
@@ -42,7 +43,7 @@ def test_invalid_acquisition_is_not_an_open_gap():
 
 def test_idle_false_pulse_rejects_otherwise_good_pair():
     t, valid, state = stimulus()
-    state[(t >= .04) & (t < .042)] = 1
+    state[(t >= .045) & (t < .047)] = 1
     result = event_metrics(t, valid, state, 0)
     assert not result["gap_pair_pass"]
     assert result["idle_or_extra_events"] == 2

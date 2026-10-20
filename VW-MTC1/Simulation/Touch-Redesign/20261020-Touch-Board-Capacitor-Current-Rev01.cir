@@ -1,0 +1,28 @@
+* Three simultaneous precharged BOARD capacitor discharges, 3.6 V rail.
+* Original 10k -1% versus Rev B 1.15M -1.5% including tolerance/drift margin.
+* External wire charge is assessed separately through the declared MD network.
+.step param RL list 9900 1132750
+.param CB=if(RL<100k,27n,300p)
+Vrail rail 0 3.6
+Vcharge charge 0 PWL(0 1 99.99u 1 100u 0)
+Vcontact contact 0 PWL(0 0 100u 0 100.01u 1)
+.model SWCHARGE SW(Ron=1 Roff=1T Vt=.5 Vh=0)
+.model SWCONTACT SW(Ron=1 Roff=1T Vt=.5 Vh=0)
+Scharge0 rail sense0 charge 0 SWCHARGE
+Scharge1 rail sense1 charge 0 SWCHARGE
+Scharge2 rail sense2 charge 0 SWCHARGE
+Cboard0 sense0 0 {CB}
+Cboard1 sense1 0 {CB}
+Cboard2 sense2 0 {CB}
+Rlimit0 sense0 pin0 {RL}
+Rlimit1 sense1 pin1 {RL}
+Rlimit2 sense2 pin2 {RL}
+Scontact0 pin0 0 contact 0 SWCONTACT
+Scontact1 pin1 0 contact 0 SWCONTACT
+Scontact2 pin2 0 contact 0 SWCONTACT
+Btotal total 0 V=abs(I(Rlimit0))+abs(I(Rlimit1))+abs(I(Rlimit2))
+.save V(total)
+.options plotwinsize=0
+.tran 0 120u 0 1n
+.meas tran total_peak MAX V(total) FROM 100u TO 120u
+.end
