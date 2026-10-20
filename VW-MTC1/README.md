@@ -14,3 +14,9 @@ Replacement controller board for the SEJ446 wire-maze ataxia assessment rig.
 Status: design complete, ERC 0 errors, DRC 0 errors / 0 unconnected / 0 schematic-parity issues.
 Not yet built or measured. See the open items in section 10 of the design report before ordering.
 Research and education use only; not a registered medical device.
+
+The table and status above describe the original Rev00 design package. The maintained
+Python tools now have a package build and hardware-free regression suite. See the
+[repository build instructions](../README.md) and
+[software verification record](../docs/20261020-VW-MTC1-Verification-Rev00.md).
+`Firmware/` still contains a pin-map header only, not a flashable firmware application.
