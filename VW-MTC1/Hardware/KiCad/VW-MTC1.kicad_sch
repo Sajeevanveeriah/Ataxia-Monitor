@@ -6,8 +6,8 @@
 	(paper "A3")
 	(title_block
 		(title "VW-MTC1 MazeTrack Controller - Top level")
-		(date "2026-10-19")
-		(rev "A")
+		(date "2026-10-21")
+		(rev "B")
 		(company "Voltwyn")
 		(comment 1 "VW-MTC1 MazeTrack Controller - Root")
 		(comment 2 "Designed by S. Veeriah. Generated from design.py netlist spec")
@@ -10313,7 +10313,7 @@
 			(justify left)
 		)
 	)
-	(text "Objective wire-maze assessment controller for ataxia research: 4-ch Hall sensing, 12-bit ADC, IMU, touch detection, haptics, Li-ion power, USB-C, microSD, Wi-Fi/BLE."
+	(text "Objective wire-maze assessment controller for ataxia research: 4-ch Hall sensing, 12-bit Hall ADC, IMU, 16-bit synchronous touch detection, haptics, Li-ion power, USB-C, microSD, Wi-Fi/BLE."
 		(exclude_from_sim no)
 		(at 25.4 27.94 0)
 		(effects
