@@ -8952,14 +8952,14 @@
 		)
 	)
 	(text "Both ADCs deselected at reset"
-		(at 340.36 76.2 0)
+		(at 350.52 76.2 0)
 		(effects
 			(font
 				(size 1.05 1.05)
 			)
 			(justify left)
 		)
-		(uuid "a582bb56-7973-54c0-9bf3-17fc965fa60d")
+		(uuid "26979bd1-63b3-5dcb-bb36-b2fdd07afad9")
 	)
 	(symbol
 		(lib_id "Voltwyn:REF3325")

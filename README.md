@@ -1,13 +1,13 @@
 # Ataxia Device and Monitor
 
-This repository contains the VW-MTC1 MazeTrack controller design, its LTspice analysis tools, and the Android monitoring prototype. The controller package is the current hardware setup. The Android app still reads phone sensors; a board-to-app transport and executable board firmware have not been implemented.
+This repository contains the VW-MTC1 MazeTrack controller design, its LTspice analysis tools, and the Android monitoring prototype. The maintained KiCad design is Rev B, with a buildable ESP32 touch acquisition demonstrator. The Android app still reads phone sensors; board-to-app transport and a complete board application have not been implemented.
 
 ## Project map
 
 | Path | Contents |
 | --- | --- |
 | `VW-MTC1/Hardware/` | KiCad 10 sources, fabrication exports and archived ERC/DRC reports |
-| `VW-MTC1/Firmware/` | Rev A pin map and candidate portable touch decoder; no flashable firmware application yet |
+| `VW-MTC1/Firmware/` | Rev B pin map, portable touch decoder and ESP-IDF acquisition application |
 | `VW-MTC1/Simulation/` | LTspice circuits, archived results/plots and Python analysis tools |
 | `VW-MTC1/Docs/` | Original Rev00 design report, datasheet and images |
 | `app/` | Android app, local JVM tests and [app documentation](app/README.md) |
@@ -108,13 +108,21 @@ The app preserves raw phone proximity readings in their own sensor type. They ar
 
 ## Automated verification
 
-The PR workflow builds and tests the Python tools on Windows and Linux, checks the pin-map header on Linux, and builds/tests/lints Android on Linux. It does not flash hardware, run physical measurements or regenerate fabrication exports.
+The PR workflow builds and tests the Python tools on Windows and Linux, runs the
+portable C++ tests, builds the Rev B ESP32 firmware, and builds/tests/lints Android.
+It does not flash hardware, run LTspice or physical measurements, or regenerate
+fabrication exports.
 
-The touch redesign is a **candidate**, with a verified model for 5 ms gap detection
-and an unresolved current measurement boundary. The KiCad circuit remains Rev A.
-See the [touch design note](docs/20261020-Touch-Redesign-Rev00.md) for the
-10,368 decoder replays, current results and remaining hardware work. The new
-Rev01 BOM corrects the existing Rev A fit-status grouping; it is not a touch
-redesign BOM.
+The [Rev01 touch design note](docs/20261021-Touch-Redesign-Rev01.md) records
+103,680 passing channel replays across 11,520 LTspice cases. The current limits
+are 9.534 µA unweighted at the PCB and 9.661 µA through the specified contact
+measurement network. Raw contact pulses exceed 10 µA; the frequency weighting,
+cable-capacitance envelope and remaining bench checks are explicit in the note.
+
+Use the **Rev02 BOM** with the current Rev B KiCad source. The original Rev00
+Gerbers, pick-and-place and STEP exports remain Rev A. See the
+[fabrication revision boundary](VW-MTC1/Hardware/Fabrication/README.md) before
+preparing an order. Firmware setup and LTspice reproduction commands are in the
+Rev01 design note. Rev B firmware must not be flashed onto an unmodified Rev A board.
 
 The original thesis and previously delivered package ZIP remain local and are excluded from Git. The original Rev00 package files under `VW-MTC1/` remain available alongside the maintained source tools.
