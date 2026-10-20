@@ -1,0 +1,29 @@
+* Worst precharged BOARD capacitor current, three simultaneous contacts.
+* This isolates the PCB-source current path. External wire capacitance is
+* deliberately absent here and is separately modelled by verify_touch.py.
+* Original 10k at -1% versus candidate 1.2M at -1%, rail at 3.48 V.
+.step param RL list 9900 1188000
+.param CB=if(RL<100k,27n,20p)
+Vrail rail 0 3.48
+Vcharge charge 0 PWL(0 1 99.99u 1 100u 0)
+Vcontact contact 0 PWL(0 0 100u 0 100.01u 1)
+.model SWCHARGE SW(Ron=1 Roff=1T Vt=.5 Vh=0)
+.model SWCONTACT SW(Ron=1 Roff=1T Vt=.5 Vh=0)
+Scharge0 rail sense0 charge 0 SWCHARGE
+Scharge1 rail sense1 charge 0 SWCHARGE
+Scharge2 rail sense2 charge 0 SWCHARGE
+Cboard0 sense0 0 {CB}
+Cboard1 sense1 0 {CB}
+Cboard2 sense2 0 {CB}
+Rlimit0 sense0 pin0 {RL}
+Rlimit1 sense1 pin1 {RL}
+Rlimit2 sense2 pin2 {RL}
+Scontact0 pin0 0 contact 0 SWCONTACT
+Scontact1 pin1 0 contact 0 SWCONTACT
+Scontact2 pin2 0 contact 0 SWCONTACT
+Btotal total 0 V=max(I(Rlimit0),0)+max(I(Rlimit1),0)+max(I(Rlimit2),0)
+.save V(total)
+.options plotwinsize=0
+.tran 0 120u 0 1n
+.meas TRAN total_peak MAX V(total) FROM 100u TO 120u
+.end

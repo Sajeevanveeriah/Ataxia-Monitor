@@ -33,6 +33,11 @@ jobs:
       - run: python scripts/check_project.py
       - if: runner.os == 'Linux'
         run: g++ -std=c++17 -Wall -Wextra -Werror -fsyntax-only tests/pinmap_compile.cpp
+      - name: Compile and run the portable touch decoder tests
+        if: runner.os == 'Linux'
+        run: |
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror tests/touch_decoder_test.cpp -o build/touch_decoder_tests
+          build/touch_decoder_tests
 
   android:
     name: Android build, JVM tests and lint
