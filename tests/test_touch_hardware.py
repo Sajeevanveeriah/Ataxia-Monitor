@@ -19,8 +19,12 @@ def test_native_kicad_touch_topology():
 def test_export_corresponds_to_current_schematic_sources():
     root = Path(__file__).resolve().parents[1]
     receipt = json.loads(NETLIST.with_suffix(".json").read_text())
+    assert receipt["source_hash_normalisation"] == "LF"
     for relative, digest in receipt["source_sha256"].items():
-        assert hashlib.sha256((root / relative).read_bytes()).hexdigest() == digest, relative
+        # The original Power sheet can have CRLF in an existing Windows
+        # checkout and LF in Git. Its electrical content is identical.
+        content = (root / relative).read_bytes().replace(b"\r\n", b"\n")
+        assert hashlib.sha256(content).hexdigest() == digest, relative
 
 
 def test_esd_or_capacitor_on_exposed_wire_fails():
