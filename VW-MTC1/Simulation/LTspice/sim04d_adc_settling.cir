@@ -1,0 +1,30 @@
+* SIM04d - VW-MTC1 Hall front end - MCP3204 sample-capacitor kick-back
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : can U6 (MCP6004 class) drive the MCP3204 input sampler?
+*           MCP3204 sample capacitor 20 pF behind ~1 k switch resistance,
+*           sample window 1.5 us. Worst case: the sample capacitor was left
+*           at 0 V (previous channel at 0 V) while this channel sits at
+*           2.45 V (magnet peak), so the full charge 20 pF x 2.45 V kicks the
+*           op-amp output. Check V(csamp) settles to within 0.5 LSB of
+*           12 bit (3.3 V / 4096 / 2 = 0.40 mV) of the DC value within 1.5 us.
+* The switch closes at t = 1 ms (filter fully settled on DC input).
+.include vw_hall_afe.inc
+.param VSIG=2.45
+Vdd   vdd 0 3.3
+Vs    hs 0 {VSIG}
+Rsens hs hall 100
+XF    hall adc vdd hall_lpf
+.model SWS SW(Ron=1k Roff=1G Vt=0.5 Vh=0)
+Ssamp adc csamp ctl 0 SWS
+Csamp csamp 0 20p
+Vctl  ctl 0 PWL(0 0 1m 0 1.00001m 1)
+* initial condition: sample cap held at 0 V during the DC operating point; the
+* filter starts at its true DC operating point (no uic).
+.ic V(csamp)=0
+.save V(adc) V(csamp)
+.tran 0 1.02m 0 2n
+.meas TRAN vfinal AVG V(csamp) FROM 1.015m TO 1.02m
+.meas TRAN vadc_pre FIND V(adc) AT 0.999m
+.meas TRAN vadc_min MIN V(adc) FROM 1m TO 1.02m
+.end

@@ -1,0 +1,34 @@
+LTspice 26.1.1 for Windows
+Circuit: C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim03d_powerpath_unplug_final.cir
+Start Time: Mon Oct 19 10:40:11 2026
+solver = Normal
+Maximum thread count: 32
+tnom = 27
+temp = 27
+method = trap
+xbb:C28: Increased Cpar to 1e-11
+xbb:C30: Increased Cpar to 1e-11
+xbb:C31: Increased Cpar to 1e-11
+Direct Newton iteration failed to find operating point.
+Starting Gmin stepping
+Gmin stepping succeeded in finding the operating point.
+
+Total elapsed time: 763.784 seconds.
+Total iterations: 56196885
+
+Files loaded:
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim03d_powerpath_unplug_final.cir
+C:\Users\sajee\AppData\Local\LTspice\lib\sub\LTC3536.sub
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\vw_3v3_buckboost.inc
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\vw_models.lib
+
+vsys_usb: AVG(V(vsys))=4.64799399224 FROM 0.0045 TO 0.005
+vsys_min: MIN(V(vsys))=2.95104575157 FROM 0.005 TO 0.015
+vsys_bat: AVG(V(vsys))=3.65067964416 FROM 0.014 TO 0.015
+v3_min: MIN(V(ofilt))=3.26166796684 FROM 0.004 TO 0.02
+v3_max: MAX(V(ofilt))=3.41870045662 FROM 0.004 TO 0.02
+v3_nom: AVG(V(ofilt))=3.31481078181 FROM 0.004 TO 0.005
+id_rev_min: MIN(I(D40))=-0.00428722426295 FROM 0.006 TO 0.015
+id_rev_end: AVG(I(D40))=-3.17071582415e-05 FROM 0.014 TO 0.015
+t_q1_on: V(vbat)-V(vsys)=0.1 AT 0.00553203901422
+vbus_end: AVG(V(vbus))=2.09176943201 FROM 0.014 TO 0.015

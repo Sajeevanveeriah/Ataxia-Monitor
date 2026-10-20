@@ -1,0 +1,30 @@
+* SIM00 - VW-MTC1 MOSFET model check (vw_models.lib)
+* Measures RDS(on) of the AO3401A / AO3400A fits at 0.5 A for |VGS| = 4.5 V
+* and 2.5 V, and VGS(th) at |ID| = 250 uA with drain tied to gate.
+* P-channel current is injected into the drain (drain -> source), which is
+* the direction Q1 conducts in the VW-MTC1 power path.
+.include vw_models.lib
+VgP45 gp45 0 -4.5
+MP45  dp45 gp45 0 0 AO3401A
+IP45  0 dp45 0.5
+VgP25 gp25 0 -2.5
+MP25  dp25 gp25 0 0 AO3401A
+IP25  0 dp25 0.5
+VgN45 gn45 0 4.5
+MN45  dn45 gn45 0 0 AO3400A
+IN45  0 dn45 0.5
+VgN25 gn25 0 2.5
+MN25  dn25 gn25 0 0 AO3400A
+IN25  0 dn25 0.5
+MPt   gpt gpt 0 0 AO3401A
+IPt   gpt 0 250u
+MNt   gnt gnt 0 0 AO3400A
+INt   0 gnt 250u
+.op
+.meas OP rdsp_45 PARAM V(dp45)/0.5
+.meas OP rdsp_25 PARAM V(dp25)/0.5
+.meas OP rdsn_45 PARAM V(dn45)/0.5
+.meas OP rdsn_25 PARAM V(dn25)/0.5
+.meas OP vthp PARAM V(gpt)
+.meas OP vthn PARAM V(gnt)
+.end

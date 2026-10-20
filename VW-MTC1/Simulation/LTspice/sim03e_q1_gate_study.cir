@@ -1,0 +1,41 @@
+* SIM03e - VW-MTC1 power path: Q1 turn-on delay vs gate pull-down R43
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : SIM03a/b showed Q1 (AO3401A) stays off after USB unplug: its
+*           gate sits on VBUS, and VBUS (C40 10 uF) only discharges through
+*           R41+R42 || R43 = 66.7 k (tau 0.67 s) once VSYS is held at
+*           VBAT - Vbody (2.95 V). Meanwhile the load runs through the body
+*           diode. This study steps R43 to find the turn-on delay.
+* Load    : the LTC3536 + 300 mA on +3V3 is replaced by a constant-power
+*           sink of 1.06 W on VSYS (Pin measured in SIM01c at 300 mA), so a
+*           400 ms window runs quickly. Switching ripple is not modelled.
+* Unplug at 2 ms. Gate tied directly to VBUS (proposed topology).
+.include vw_models.lib
+.model 1N5819 D(Is=31.7u Rs=.051 N=1.373 Cjo=110p M=.35 Eg=.69 Xti=2 Iave=1 Vpk=40 mfg=OnSemi type=Schottky)
+.model SWUSB SW(Ron=10m Roff=100Meg Vt=0.5 Vh=0)
+.param R43=100k
+.step param R43 list 100k 10k 2.2k 1k
+
+Vusb   usb 0 5
+Rcab   usb a1 100m
+Lcab   a1 a2 1u Rpar=50
+S_USB  a2 vbus plug 0 SWUSB
+Vplug  plug 0 PWL(0 1 2m 1 2.0001m 0)
+C40    vbus 0 10u Rser=3m
+R41    vbus vsense 100k
+R42    vsense 0 100k
+D40    vbus vsys 1N5819
+MQ1    vbat vbus vsys vsys AO3401A
+R43    vbus 0 {R43}
+C41    vsys 0 10u Rser=3m
+Vcell  cell 0 3.7
+Rcell  cell vbat 50m
+Bload  vsys 0 I=1.06/max(V(vsys),1.5)
+
+.save V(vbus) V(vsys) V(vbat) Id(MQ1)
+.tran 0 400m 0 10u
+.meas TRAN t_on WHEN V(vbat)-V(vsys)=0.1 FALL=1 TD=2m
+.meas TRAN t_full WHEN V(vbat)-V(vsys)=0.04 FALL=1 TD=2m
+.meas TRAN vsys_min MIN V(vsys) FROM 2m TO 400m
+.meas TRAN i_usb_r43 PARAM 5/R43
+.end

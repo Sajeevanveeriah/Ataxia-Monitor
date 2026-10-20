@@ -1,0 +1,48 @@
+* SIM06a - VW-MTC1 haptic ERM motor driver (Q2 = AO3400A) - duty sweep
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : 20 kHz PWM drive of an ERM vibration motor from VSYS.
+*           VSYS = 4.6 V (USB through Schottky) and 3.7 V (battery).
+*           Find the duty that gives ~3.0 V average across the motor,
+*           then check drain peak at turn-off, motor current ripple, local
+*           VSYS ripple and MOSFET gate rise time.
+* Circuit : VSYS source -> 50 mohm trace (R74) -> node vloc with C70 10 uF
+*           (ESR 3 mohm) + C71 100 nF. Motor M1 from vloc to drain:
+*           25 ohm + 150 uH + back-EMF. Back-EMF ASSUMPTION: E = 0.5 x the
+*           motor's average terminal voltage, implemented as 0.5 x a 200 us
+*           RC average of V(vloc,drain) (behavioural, steady-state only).
+*           D70 1N5819 flyback (B5819W equivalent) drain -> vloc.
+*           Q2 AO3400A (vw_models.lib fit), gate from 3.3 V GPIO via R72
+*           100 ohm, R73 100 k gate pull-down. GPIO edges 5 ns, source
+*           impedance not modelled beyond R72.
+.include vw_models.lib
+.model 1N5819 D(Is=31.7u Rs=.051 N=1.373 Cjo=110p M=.35 Eg=.69 Xti=2 Iave=1 Vpk=40 mfg=OnSemi type=Schottky)
+.param VS=4.6 DUTY=0.7 FPWM=20k
+.step param VS list 3.7 4.6
+.step param DUTY list 0.6 0.7 0.8 0.9
+
+Vsys   vsrc 0 {VS}
+R74    vsrc vloc 50m
+C70    vloc 0 10u Rser=3m Lser=0.5n
+C71    vloc 0 100n Rser=10m
+RM     vloc m1 25
+LM     m1 m2 150u
+BEMF   m2 drain V=0.5*V(vavg)
+Bavg   va 0 V=V(vloc)-V(drain)
+Ravg   va vavg 200k
+Cavg   vavg 0 1n
+D70    drain vloc 1N5819
+MQ2    drain gate 0 0 AO3400A
+R72    gpio gate 100
+R73    gate 0 100k
+Vgpio  gpio 0 PULSE(0 3.3 0 5n 5n {DUTY/FPWM-5n} {1/FPWM})
+
+.save V(vloc) V(drain) V(gate) I(RM) V(vavg) I(R74) I(D70)
+.tran 0 4m 0 2n
+.meas TRAN vmot AVG V(vloc)-V(drain) FROM 3m TO 4m
+.meas TRAN imot AVG I(RM) FROM 3m TO 4m
+.meas TRAN imot_pp PP I(RM) FROM 3m TO 4m
+.meas TRAN vdpk MAX V(drain) FROM 3m TO 4m
+.meas TRAN vloc_pp PP V(vloc) FROM 3m TO 4m
+.meas TRAN isys AVG I(R74) FROM 3m TO 4m
+.end

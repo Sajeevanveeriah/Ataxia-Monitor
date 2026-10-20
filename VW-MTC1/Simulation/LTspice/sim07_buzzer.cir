@@ -1,0 +1,36 @@
+* SIM07 - VW-MTC1 magnetic buzzer driver (Q3 = AO3400A low-side switch)
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : 4 kHz 50 % drive of a magnetic buzzer from +3V3. Check peak
+*           drain voltage at turn-off and +3V3 rail ripple with 22 uF on the
+*           rail (C80) close to the buzzer.
+* Circuit : +3V3 modelled as an ideal 3.315 V source behind 50 mohm
+*           (converter output impedance + trace, ASSUMPTION; the LTC3536 loop
+*           is not included here). C80 22 uF ceramic (10 uF effective at
+*           3.3 V DC bias, ESR 3 mohm, ESL 0.5 nH).
+*           Buzzer BZ1: 16 ohm + 1 mH (coil only, no acoustic resonance).
+*           D80 1N4148 flyback across the buzzer (drain -> +3V3).
+*           Q3 AO3400A (vw_models.lib fit), gate from 3.3 V GPIO via R82
+*           100 ohm, R83 100 k pull-down.
+.include vw_models.lib
+.model 1N4148 D(Is=2.52n Rs=.568 N=1.752 Cjo=4p M=.4 tt=20n Iave=200m Vpk=75 mfg=OnSemi type=silicon)
+
+V33    vsrc 0 3.315
+R84    vsrc v33 50m
+C80    v33 0 10u Rser=3m Lser=0.5n
+RBZ    v33 b1 16
+LBZ    b1 drain 1m
+D80    drain v33 1N4148
+MQ3    drain gate 0 0 AO3400A
+R82    gpio gate 100
+R83    gate 0 100k
+Vgpio  gpio 0 PULSE(0 3.3 0 5n 5n 125u 250u)
+
+.save V(v33) V(drain) V(gate) I(RBZ) I(D80)
+.tran 0 20m 0 2n
+.meas TRAN vdpk MAX V(drain) FROM 15m TO 20m
+.meas TRAN v33_pp PP V(v33) FROM 15m TO 20m
+.meas TRAN ibz_pk MAX I(RBZ) FROM 15m TO 20m
+.meas TRAN ibz_avg AVG I(RBZ) FROM 15m TO 20m
+.meas TRAN id80_pk MAX I(D80) FROM 15m TO 20m
+.end

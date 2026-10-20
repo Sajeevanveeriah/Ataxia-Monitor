@@ -1,0 +1,7 @@
+(version 1)
+(rule "Fine-pitch pads inside one package (LGA-14, VSSOP-8, USON-10, USB-C)"
+  (condition "A.Type == 'Pad' && B.Type == 'Pad' && (A.memberOfFootprint('U12') || A.memberOfFootprint('U11') || A.memberOfFootprint('U8') || A.memberOfFootprint('U10') || A.memberOfFootprint('J1'))")
+  (constraint clearance (min 0.1)))
+(rule "USB-C vendor footprint pad to NPTH peg"
+  (condition "A.memberOfFootprint('J1') && B.memberOfFootprint('J1')")
+  (constraint hole_clearance (min 0.1)))

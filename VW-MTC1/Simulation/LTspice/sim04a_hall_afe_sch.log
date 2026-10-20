@@ -1,0 +1,18 @@
+LTspice 26.1.1 for Windows
+Circuit: C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim04a_hall_afe_sch.net
+Start Time: Mon Oct 19 10:25:59 2026
+solver = Normal
+Maximum thread count: 32
+tnom = 27
+temp = 27
+method = trap
+Direct Newton iteration succeeded in finding operating point.
+Total elapsed time: 0.061 seconds.
+Total iterations: 12
+
+Files loaded:
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim04a_hall_afe_sch.net
+C:\Users\sajee\AppData\Local\LTspice\lib\sub\UniversalOpAmp2.lib
+
+f3db: mag(V(adc))=0.70711 AT 237.989211349
+g1k: mag(V(adc))=(-25.444209513dB,0°) at 1000

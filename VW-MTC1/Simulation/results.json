@@ -1,0 +1,3305 @@
+{
+  "SIM04_hall_afe": {
+    "ac_f_minus3dB": {
+      "value": 238.0,
+      "units": "Hz",
+      "limit": "expected 232 Hz (calc)",
+      "result": "PASS",
+      "note": "f0 (-90 deg) = 230.9 Hz"
+    },
+    "ac_Q": {
+      "value": 0.729,
+      "units": "-",
+      "limit": "expected 0.73 (calc)",
+      "result": "PASS"
+    },
+    "ac_peaking": {
+      "value": 0.0148,
+      "units": "dB",
+      "limit": "< 0.5 dB",
+      "result": "PASS"
+    },
+    "ac_gain_50Hz": {
+      "value": 0.014,
+      "units": "dB",
+      "limit": "passband, > -0.5 dB",
+      "result": "PASS"
+    },
+    "ac_gain_1kHz": {
+      "value": -25.44,
+      "units": "dB",
+      "limit": "report (Nyquist 1 kHz)",
+      "result": "INFO"
+    },
+    "ac_gain_1p2MHz": {
+      "value": -45.61,
+      "units": "dB",
+      "limit": "report",
+      "result": "INFO",
+      "note": "Sallen-Key high-frequency feed-through limited by op-amp model output impedance and GBW"
+    },
+    "ac_group_delay_10Hz": {
+      "value": 0.947,
+      "units": "ms",
+      "limit": "< 2 ms",
+      "result": "PASS"
+    },
+    "ripple_1p2MHz_old_pp": {
+      "value": 9.996,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "ripple_1p2MHz_new_pp": {
+      "value": 0.0524,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "tran_input_broadband_noise_rms": {
+      "value": 19.88,
+      "units": "mV rms",
+      "limit": "target 20 mV rms",
+      "result": "INFO"
+    },
+    "tran_noise_rms_old": {
+      "value": 21.406,
+      "units": "mV rms",
+      "limit": "report",
+      "result": "INFO",
+      "note": "sampled at 2 kS/s; broadband + 50 Hz + 1.2 MHz ripple (rms-combined from SIM04c)"
+    },
+    "tran_noise_rms_new": {
+      "value": 7.336,
+      "units": "mV rms",
+      "limit": "lower than old",
+      "result": "PASS"
+    },
+    "tran_snr_old": {
+      "value": 31.45,
+      "units": "dB",
+      "limit": "report (0.8 V peak / noise rms)",
+      "result": "INFO"
+    },
+    "tran_snr_new": {
+      "value": 40.75,
+      "units": "dB",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "tran_snr_improvement": {
+      "value": 9.3,
+      "units": "dB",
+      "limit": "> 0 dB",
+      "result": "PASS"
+    },
+    "tran_peak_time_mean_error_old": {
+      "value": -0.0125,
+      "units": "ms",
+      "limit": "report (mean error about known delay)",
+      "result": "INFO"
+    },
+    "tran_peak_time_mean_error_new": {
+      "value": 0.148,
+      "units": "ms",
+      "limit": "report (mean error about known delay)",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_rms_old": {
+      "value": 1.3323,
+      "units": "ms rms",
+      "limit": "report (max-sample method)",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_rms_new": {
+      "value": 0.6415,
+      "units": "ms rms",
+      "limit": "report (max-sample method)",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_max_old": {
+      "value": 3.275,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_max_new": {
+      "value": 1.158,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_rms_old_interp": {
+      "value": 1.317,
+      "units": "ms rms",
+      "limit": "report (3-point parabolic interpolation)",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_rms_new_interp": {
+      "value": 0.6033,
+      "units": "ms rms",
+      "limit": "report (3-point parabolic interpolation)",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_max_old_interp": {
+      "value": 3.1881,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "tran_peak_time_error_max_new_interp": {
+      "value": 0.9624,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "tran_clean_peak_delay_new": {
+      "value": 0.942,
+      "units": "ms",
+      "limit": "< 2 ms (fixed filter delay, can be subtracted in firmware)",
+      "result": "PASS"
+    },
+    "_n_peak_estimates_per_design": 200,
+    "adc_sample_settling_0p5LSB": {
+      "value": 0.635,
+      "units": "us",
+      "limit": "< 1.5 us",
+      "result": "PASS",
+      "note": "generic op-amp model; real MCP6004 open-loop output impedance not modelled"
+    },
+    "adc_kick_dip_at_opamp_output": {
+      "value": 78.7,
+      "units": "mV",
+      "limit": "report",
+      "result": "INFO"
+    }
+  },
+  "SIM01_buckboost": {
+    "startup_vout_final": {
+      "value": 3.3149,
+      "units": "V",
+      "limit": "3.315 V nominal +/- 1 %",
+      "result": "PASS"
+    },
+    "startup_overshoot_switching_avg": {
+      "value": 0.015,
+      "units": "%",
+      "limit": "< 3 %",
+      "result": "PASS",
+      "note": "one-switching-period average of the 20 MHz-limited rail"
+    },
+    "startup_overshoot_peak_20MHz": {
+      "value": 0.376,
+      "units": "%",
+      "limit": "< 3 %",
+      "result": "PASS",
+      "note": "includes switching ripple peak"
+    },
+    "startup_raw_spike_peak": {
+      "value": 3.779,
+      "units": "V",
+      "limit": "report (ESL spikes, full bandwidth)",
+      "result": "INFO",
+      "note": "ideal-switch edges into 0.5 nH ESL; not representative of a scope reading with 20 MHz limit"
+    },
+    "startup_t10_to_t90": {
+      "value": 0.706,
+      "units": "ms",
+      "limit": "report (soft start)",
+      "result": "INFO"
+    },
+    "startup_time_to_99pct": {
+      "value": 0.91,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "startup_input_current_peak": {
+      "value": 1.919,
+      "units": "A",
+      "limit": "report",
+      "result": "INFO",
+      "note": "C28 charging during the 20 us LTspice startup source ramp (simulation artefact, not converter inrush)"
+    },
+    "loadstep_vin_3.0V_vmin": {
+      "value": 3.1975,
+      "units": "V",
+      "limit": ">= 3.13 V",
+      "result": "PASS",
+      "note": "20 MHz BW, includes ripple; 1-period average 3.2321 V"
+    },
+    "loadstep_vin_3.0V_vmax": {
+      "value": 3.3961,
+      "units": "V",
+      "limit": "<= 3.48 V",
+      "result": "PASS",
+      "note": "20 MHz BW, includes ripple; 1-period average 3.3915 V"
+    },
+    "loadstep_vin_3.0V_dip_pct": {
+      "value": -3.54,
+      "units": "%",
+      "limit": ">= -5 %",
+      "result": "PASS"
+    },
+    "loadstep_vin_3.0V_overshoot_pct": {
+      "value": 2.45,
+      "units": "%",
+      "limit": "<= +5 %",
+      "result": "PASS"
+    },
+    "loadstep_vin_3.0V_recovery_up": {
+      "value": 47.3,
+      "units": "us",
+      "limit": "report (to within +/- 1 %)",
+      "result": "INFO"
+    },
+    "loadstep_vin_3.0V_recovery_down": {
+      "value": 42.4,
+      "units": "us",
+      "limit": "report (to within +/- 1 %)",
+      "result": "INFO"
+    },
+    "loadstep_vin_3.0V_ringing_extrema": {
+      "value": 1,
+      "units": "alternating extrema > 3 mV",
+      "limit": "<= 3 (i.e. no more than ~1.5 cycles)",
+      "result": "PASS",
+      "note": "up: 1, down: 1"
+    },
+    "loadstep_vin_3.0V_load_regulation": {
+      "value": -0.08,
+      "units": "mV",
+      "limit": "report (50 -> 600 mA DC shift)",
+      "result": "INFO"
+    },
+    "loadstep_vin_3.7V_vmin": {
+      "value": 3.2171,
+      "units": "V",
+      "limit": ">= 3.13 V",
+      "result": "PASS",
+      "note": "20 MHz BW, includes ripple; 1-period average 3.2515 V"
+    },
+    "loadstep_vin_3.7V_vmax": {
+      "value": 3.3849,
+      "units": "V",
+      "limit": "<= 3.48 V",
+      "result": "PASS",
+      "note": "20 MHz BW, includes ripple; 1-period average 3.3794 V"
+    },
+    "loadstep_vin_3.7V_dip_pct": {
+      "value": -2.95,
+      "units": "%",
+      "limit": ">= -5 %",
+      "result": "PASS"
+    },
+    "loadstep_vin_3.7V_overshoot_pct": {
+      "value": 2.12,
+      "units": "%",
+      "limit": "<= +5 %",
+      "result": "PASS"
+    },
+    "loadstep_vin_3.7V_recovery_up": {
+      "value": 27.9,
+      "units": "us",
+      "limit": "report (to within +/- 1 %)",
+      "result": "INFO"
+    },
+    "loadstep_vin_3.7V_recovery_down": {
+      "value": 29.0,
+      "units": "us",
+      "limit": "report (to within +/- 1 %)",
+      "result": "INFO"
+    },
+    "loadstep_vin_3.7V_ringing_extrema": {
+      "value": 1,
+      "units": "alternating extrema > 3 mV",
+      "limit": "<= 3 (i.e. no more than ~1.5 cycles)",
+      "result": "PASS",
+      "note": "up: 1, down: 1"
+    },
+    "loadstep_vin_3.7V_load_regulation": {
+      "value": -0.16,
+      "units": "mV",
+      "limit": "report (50 -> 600 mA DC shift)",
+      "result": "INFO"
+    },
+    "loadstep_vin_4.6V_vmin": {
+      "value": 3.2218,
+      "units": "V",
+      "limit": ">= 3.13 V",
+      "result": "PASS",
+      "note": "20 MHz BW, includes ripple; 1-period average 3.2568 V"
+    },
+    "loadstep_vin_4.6V_vmax": {
+      "value": 3.383,
+      "units": "V",
+      "limit": "<= 3.48 V",
+      "result": "PASS",
+      "note": "20 MHz BW, includes ripple; 1-period average 3.3778 V"
+    },
+    "loadstep_vin_4.6V_dip_pct": {
+      "value": -2.81,
+      "units": "%",
+      "limit": ">= -5 %",
+      "result": "PASS"
+    },
+    "loadstep_vin_4.6V_overshoot_pct": {
+      "value": 2.06,
+      "units": "%",
+      "limit": "<= +5 %",
+      "result": "PASS"
+    },
+    "loadstep_vin_4.6V_recovery_up": {
+      "value": 32.1,
+      "units": "us",
+      "limit": "report (to within +/- 1 %)",
+      "result": "INFO"
+    },
+    "loadstep_vin_4.6V_recovery_down": {
+      "value": 36.4,
+      "units": "us",
+      "limit": "report (to within +/- 1 %)",
+      "result": "INFO"
+    },
+    "loadstep_vin_4.6V_ringing_extrema": {
+      "value": 1,
+      "units": "alternating extrema > 3 mV",
+      "limit": "<= 3 (i.e. no more than ~1.5 cycles)",
+      "result": "PASS",
+      "note": "up: 1, down: 1"
+    },
+    "loadstep_vin_4.6V_load_regulation": {
+      "value": -0.11,
+      "units": "mV",
+      "limit": "report (50 -> 600 mA DC shift)",
+      "result": "INFO"
+    },
+    "eff_pwm_vin3p7_50mA": {
+      "value": 93.93,
+      "units": "%",
+      "limit": "report",
+      "result": "INFO",
+      "note": "Pin 0.1765 W, Pout 0.1657 W"
+    },
+    "eff_pwm_vin3p7_300mA": {
+      "value": 93.93,
+      "units": "%",
+      "limit": "report",
+      "result": "INFO",
+      "note": "Pin 1.0587 W, Pout 0.9945 W"
+    },
+    "eff_pwm_vin3p7_600mA": {
+      "value": 90.97,
+      "units": "%",
+      "limit": "report",
+      "result": "INFO",
+      "note": "Pin 2.1862 W, Pout 1.9889 W"
+    },
+    "ripple_pwm_300mA_pp_20MHz": {
+      "value": 37.08,
+      "units": "mV p-p",
+      "limit": "report (no limit given; ESP32-S3 tolerates far more)",
+      "result": "INFO"
+    },
+    "ripple_pwm_300mA_pp_fullBW": {
+      "value": 1132.6,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO",
+      "note": "dominated by ideal-switch-edge ESL spikes in the model"
+    },
+    "ripple_pwm_50mA_pp_20MHz": {
+      "value": 14.72,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "ripple_pwm_600mA_pp_20MHz": {
+      "value": 63.85,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "burst_20mA_eff": {
+      "value": 79.14,
+      "units": "%",
+      "limit": "report",
+      "result": "INFO",
+      "note": "Pin 0.0826 W, Pout 0.0653 W"
+    },
+    "burst_20mA_ripple_pp_20MHz": {
+      "value": 31.18,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "burst_20mA_vavg": {
+      "value": 3.267,
+      "units": "V",
+      "limit": "within +/- 5 %",
+      "result": "PASS"
+    }
+  },
+  "SIM02_charger": {
+    "cc_current": {
+      "value": 407.9,
+      "units": "mA",
+      "limit": "402 mA +/- 7 % (374-430 mA)",
+      "result": "PASS",
+      "note": "calc 1000 x 1 V / 2.49 k = 401.6 mA"
+    },
+    "trickle_current": {
+      "value": 39.0,
+      "units": "mA",
+      "limit": "report (expected ~C/10 below ~2.9 V; from memory of the datasheet, not re-checked)",
+      "result": "INFO"
+    },
+    "trickle_to_cc_vbat": {
+      "value": 2.942,
+      "units": "V",
+      "limit": "report (expected ~2.9 V; from memory, not re-checked)",
+      "result": "INFO"
+    },
+    "cv_voltage": {
+      "value": 4.2174,
+      "units": "V",
+      "limit": "4.2 V +/- 1 % (4.158-4.242 V)",
+      "result": "PASS"
+    },
+    "termination_current": {
+      "value": 28.8,
+      "units": "mA",
+      "limit": "about 40 mA (C/10 of 402 mA); +/- 25 % (30-50 mA)",
+      "result": "FAIL",
+      "note": "terminated at t = 7.059 s (scaled time) with V(PROG) = 80.0 mV; the ADI macro-model terminates at V(PROG) ~ 80 mV and its IBAT/IPROG ratio falls to ~895 at low current. Fixed by the IC, not by board values; datasheet C/10 limits not checked here"
+    },
+    "led_current_charging": {
+      "value": 1.39,
+      "units": "mA",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "led_current_after_termination": {
+      "value": 20.046,
+      "units": "uA",
+      "limit": "report (CHRG high-Z)",
+      "result": "INFO"
+    },
+    "thermal_calc_NOT_SIMULATED": {
+      "VBAT3.0_thetaJA80_Ta25": {
+        "P_W": 0.8,
+        "Tj_C": 89.0,
+        "thermal_regulation_engages": false
+      },
+      "VBAT3.0_thetaJA80_Ta40": {
+        "P_W": 0.8,
+        "Tj_C": 104.0,
+        "thermal_regulation_engages": false
+      },
+      "VBAT3.0_thetaJA125_Ta25": {
+        "P_W": 0.8,
+        "Tj_C": 125.0,
+        "thermal_regulation_engages": true
+      },
+      "VBAT3.0_thetaJA125_Ta40": {
+        "P_W": 0.8,
+        "Tj_C": 140.0,
+        "thermal_regulation_engages": true
+      },
+      "VBAT3.7_thetaJA80_Ta25": {
+        "P_W": 0.52,
+        "Tj_C": 66.6,
+        "thermal_regulation_engages": false
+      },
+      "VBAT3.7_thetaJA80_Ta40": {
+        "P_W": 0.52,
+        "Tj_C": 81.6,
+        "thermal_regulation_engages": false
+      },
+      "VBAT3.7_thetaJA125_Ta25": {
+        "P_W": 0.52,
+        "Tj_C": 90.0,
+        "thermal_regulation_engages": false
+      },
+      "VBAT3.7_thetaJA125_Ta40": {
+        "P_W": 0.52,
+        "Tj_C": 105.0,
+        "thermal_regulation_engages": false
+      }
+    },
+    "hotplug_peak_10uF_ceramic_only": {
+      "value": 7.962,
+      "units": "V",
+      "limit": "< 10 V (LTC4054 VCC abs max as recalled, not re-checked against the datasheet)",
+      "result": "PASS"
+    },
+    "hotplug_peak_10uF_plus_1R5": {
+      "value": 5.0,
+      "units": "V",
+      "limit": "report",
+      "result": "PASS"
+    },
+    "hotplug_peak_10uF_1R5_plus_1uF_pin": {
+      "value": 6.235,
+      "units": "V",
+      "limit": "report",
+      "result": "PASS",
+      "note": "board configuration (1 uF at the VCC pin rings with the cable inductance)"
+    }
+  },
+  "SIM05_touch_input": {
+    "sweep_summary": {
+      "CFG0": {
+        "RS_k": 100.0,
+        "RPU_k": 1000.0,
+        "CF_nF": 10.0,
+        "patient_dc_uA_calc": 3.0,
+        "patient_dc_uA_calc_worst": 3.12,
+        "core_pass_50pF": false,
+        "core_pass_100pF": false,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          0,
+          1,
+          2,
+          2
+        ],
+        "latency_ms": [
+          1.444,
+          1.678,
+          1.553,
+          1.935
+        ]
+      },
+      "CFG1": {
+        "RS_k": 22.0,
+        "RPU_k": 330.0,
+        "CF_nF": 14.999999999999998,
+        "patient_dc_uA_calc": 9.38,
+        "patient_dc_uA_calc_worst": 9.76,
+        "core_pass_50pF": true,
+        "core_pass_100pF": false,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "latency_ms": [
+          0.467,
+          0.49,
+          0.506,
+          0.545
+        ]
+      },
+      "CFG2": {
+        "RS_k": 10.0,
+        "RPU_k": 330.0,
+        "CF_nF": 14.999999999999998,
+        "patient_dc_uA_calc": 9.71,
+        "patient_dc_uA_calc_worst": 10.1,
+        "core_pass_50pF": true,
+        "core_pass_100pF": false,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "latency_ms": [
+          0.205,
+          0.216,
+          0.223,
+          0.241
+        ]
+      },
+      "CFG3": {
+        "RS_k": 10.0,
+        "RPU_k": 330.0,
+        "CF_nF": 18.0,
+        "patient_dc_uA_calc": 9.71,
+        "patient_dc_uA_calc_worst": 10.1,
+        "core_pass_50pF": true,
+        "core_pass_100pF": false,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "latency_ms": [
+          0.241,
+          0.256,
+          0.258,
+          0.285
+        ]
+      },
+      "CFG4": {
+        "RS_k": 10.0,
+        "RPU_k": 330.0,
+        "CF_nF": 22.0,
+        "patient_dc_uA_calc": 9.71,
+        "patient_dc_uA_calc_worst": 10.1,
+        "core_pass_50pF": true,
+        "core_pass_100pF": true,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "latency_ms": [
+          0.287,
+          0.308,
+          0.303,
+          0.339
+        ]
+      },
+      "CFG5": {
+        "RS_k": 10.0,
+        "RPU_k": 330.0,
+        "CF_nF": 27.0,
+        "patient_dc_uA_calc": 9.71,
+        "patient_dc_uA_calc_worst": 10.1,
+        "core_pass_50pF": true,
+        "core_pass_100pF": true,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "latency_ms": [
+          0.345,
+          0.37,
+          0.359,
+          0.405
+        ]
+      },
+      "CFG6": {
+        "RS_k": 10.0,
+        "RPU_k": 330.0,
+        "CF_nF": 33.0,
+        "patient_dc_uA_calc": 9.71,
+        "patient_dc_uA_calc_worst": 10.1,
+        "core_pass_50pF": true,
+        "core_pass_100pF": true,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "latency_ms": [
+          0.412,
+          0.442,
+          0.424,
+          0.479
+        ]
+      },
+      "CFG7": {
+        "RS_k": 10.0,
+        "RPU_k": 360.0,
+        "CF_nF": 22.0,
+        "patient_dc_uA_calc": 8.92,
+        "patient_dc_uA_calc_worst": 9.28,
+        "core_pass_50pF": true,
+        "core_pass_100pF": false,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "latency_ms": [
+          0.285,
+          0.307,
+          0.3,
+          0.34
+        ]
+      },
+      "CFG8": {
+        "RS_k": 10.0,
+        "RPU_k": 360.0,
+        "CF_nF": 27.0,
+        "patient_dc_uA_calc": 8.92,
+        "patient_dc_uA_calc_worst": 9.28,
+        "core_pass_50pF": true,
+        "core_pass_100pF": true,
+        "gap_resolved_50pF": false,
+        "gap_resolved_100pF": false,
+        "detect_0p5ms": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "latency_ms": [
+          0.341,
+          0.369,
+          0.355,
+          0.404
+        ]
+      }
+    },
+    "sweep_detail": {
+      "CFG0_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_2ms": {
+          "pulses": 2,
+          "latency_ms": 1.444,
+          "widths_ms": [
+            2.65,
+            7.06
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 1.429,
+          "widths_ms": [
+            20.58,
+            32.11
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 1.903,
+          "widths_ms": [
+            49.28
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.663,
+        "vin_max_V": 4.833,
+        "vin_min_V": -0.188,
+        "skin_vin_range_V": [
+          0.173,
+          0.93
+        ],
+        "core_pass": false,
+        "gap_resolved": true
+      },
+      "CFG1_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.467,
+          "widths_ms": [
+            1.13
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.467,
+          "widths_ms": [
+            3.9
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.466,
+          "widths_ms": [
+            21.45,
+            28.16
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 2.185,
+          "widths_ms": [
+            48.52
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.388,
+        "vin_max_V": 4.208,
+        "vin_min_V": 0.206,
+        "skin_vin_range_V": [
+          0.547,
+          1.235
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG2_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.205,
+          "widths_ms": [
+            2.26
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.205,
+          "widths_ms": [
+            4.34
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.205,
+          "widths_ms": [
+            21.84,
+            28.48
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 1.848,
+          "widths_ms": [
+            48.92
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.388,
+        "vin_max_V": 4.208,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.468,
+          1.182
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG3_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.241,
+          "widths_ms": [
+            2.53
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.241,
+          "widths_ms": [
+            5.02
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.24,
+          "widths_ms": [
+            22.25,
+            29.06
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 2.326,
+          "widths_ms": [
+            48.62
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.497,
+        "vin_max_V": 4.093,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.478,
+          1.173
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG4_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.288,
+          "widths_ms": [
+            2.81
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.287,
+          "widths_ms": [
+            6.33
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.287,
+          "widths_ms": [
+            22.83,
+            29.76
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 3.001,
+          "widths_ms": [
+            48.21
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.601,
+        "vin_max_V": 3.974,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.492,
+          1.162
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG5_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.347,
+          "widths_ms": [
+            3.02
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.345,
+          "widths_ms": [
+            12.85
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.343,
+          "widths_ms": [
+            23.67,
+            30.55
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 3.956,
+          "widths_ms": [
+            47.62
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.68,
+        "vin_max_V": 3.864,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.511,
+          1.151
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG6_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.419,
+          "widths_ms": [
+            3.05
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.412,
+          "widths_ms": [
+            14.12
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.408,
+          "widths_ms": [
+            56.18
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 5.654,
+          "widths_ms": [
+            46.4
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.722,
+        "vin_max_V": 3.77,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.534,
+          1.146
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG7_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.286,
+          "widths_ms": [
+            3.0
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.285,
+          "widths_ms": [
+            12.89
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.284,
+          "widths_ms": [
+            23.05,
+            30.39
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 2.882,
+          "widths_ms": [
+            48.49
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.581,
+        "vin_max_V": 3.983,
+        "vin_min_V": 0.089,
+        "skin_vin_range_V": [
+          0.434,
+          1.115
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG8_PH0_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.345,
+          "widths_ms": [
+            3.23
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.341,
+          "widths_ms": [
+            14.02
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.34,
+          "widths_ms": [
+            24.02,
+            31.16
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 3.745,
+          "widths_ms": [
+            48.04
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.654,
+        "vin_max_V": 3.869,
+        "vin_min_V": 0.089,
+        "skin_vin_range_V": [
+          0.454,
+          1.105
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG0_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 7.712,
+          "widths_ms": [
+            4.06
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 1.678,
+          "widths_ms": [
+            11.4
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 1.669,
+          "widths_ms": [
+            51.4
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 2.302,
+          "widths_ms": [
+            60.71
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.533,
+        "vin_max_V": 4.834,
+        "vin_min_V": -0.054,
+        "skin_vin_range_V": [
+          0.173,
+          0.927
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG1_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.49,
+          "widths_ms": [
+            7.28
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.49,
+          "widths_ms": [
+            8.97
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.49,
+          "widths_ms": [
+            49.85
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.249,
+          "widths_ms": [
+            43.02
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.381,
+        "vin_max_V": 4.209,
+        "vin_min_V": 0.206,
+        "skin_vin_range_V": [
+          0.547,
+          1.234
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG2_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.216,
+          "widths_ms": [
+            8.59
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.216,
+          "widths_ms": [
+            9.34
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.216,
+          "widths_ms": [
+            50.23
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 9.563,
+          "widths_ms": [
+            47.59
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.381,
+        "vin_max_V": 4.209,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.468,
+          1.182
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG3_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.256,
+          "widths_ms": [
+            9.0
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.256,
+          "widths_ms": [
+            9.85
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.256,
+          "widths_ms": [
+            50.7
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 9.742,
+          "widths_ms": [
+            48.02
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.48,
+        "vin_max_V": 4.094,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.478,
+          1.172
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG4_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.308,
+          "widths_ms": [
+            9.42
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.308,
+          "widths_ms": [
+            10.46
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.307,
+          "widths_ms": [
+            51.29
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 9.984,
+          "widths_ms": [
+            48.39
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.567,
+        "vin_max_V": 3.975,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.492,
+          1.158
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG5_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.372,
+          "widths_ms": [
+            9.74
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.37,
+          "widths_ms": [
+            11.15
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.369,
+          "widths_ms": [
+            51.95
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.312,
+          "widths_ms": [
+            48.68
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.622,
+        "vin_max_V": 3.865,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.511,
+          1.139
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG6_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.448,
+          "widths_ms": [
+            9.89
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.442,
+          "widths_ms": [
+            11.9
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.439,
+          "widths_ms": [
+            52.69
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.746,
+          "widths_ms": [
+            48.88
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.634,
+        "vin_max_V": 3.77,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.534,
+          1.116
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG7_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.309,
+          "widths_ms": [
+            10.02
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.307,
+          "widths_ms": [
+            10.96
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.307,
+          "widths_ms": [
+            51.66
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 9.486,
+          "widths_ms": [
+            49.84
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.535,
+        "vin_max_V": 3.983,
+        "vin_min_V": 0.089,
+        "skin_vin_range_V": [
+          0.434,
+          1.11
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG8_PH90_CC50pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.372,
+          "widths_ms": [
+            10.34
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.369,
+          "widths_ms": [
+            11.65
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.367,
+          "widths_ms": [
+            52.34
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 9.83,
+          "widths_ms": [
+            50.03
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.58,
+        "vin_max_V": 3.87,
+        "vin_min_V": 0.089,
+        "skin_vin_range_V": [
+          0.454,
+          1.09
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG0_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 3,
+          "latency_ms": null,
+          "widths_ms": [
+            6.18,
+            5.64,
+            5.56
+          ]
+        },
+        "touch_0.5ms": {
+          "pulses": 2,
+          "latency_ms": 10.691,
+          "widths_ms": [
+            7.06,
+            5.77
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 3,
+          "latency_ms": 1.553,
+          "widths_ms": [
+            1.54,
+            9.68,
+            6.14
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 3,
+          "latency_ms": 1.536,
+          "widths_ms": [
+            19.63,
+            32.47,
+            6.47
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 2,
+          "latency_ms": 1.191,
+          "widths_ms": [
+            49.23,
+            7.54
+          ]
+        },
+        "idle_end": {
+          "pulses": 2,
+          "latency_ms": null,
+          "widths_ms": [
+            5.84,
+            5.59
+          ]
+        },
+        "idle_vin_min_V": 0.132,
+        "vin_max_V": 6.351,
+        "vin_min_V": -2.296,
+        "skin_vin_range_V": [
+          -0.204,
+          1.306
+        ],
+        "core_pass": false,
+        "gap_resolved": false
+      },
+      "CFG1_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_2ms": {
+          "pulses": 2,
+          "latency_ms": 0.506,
+          "widths_ms": [
+            3.21,
+            3.98
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.506,
+          "widths_ms": [
+            20.83,
+            30.69
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 1.284,
+          "widths_ms": [
+            48.89
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.484,
+        "vin_max_V": 5.113,
+        "vin_min_V": 0.203,
+        "skin_vin_range_V": [
+          0.203,
+          1.578
+        ],
+        "core_pass": false,
+        "gap_resolved": true
+      },
+      "CFG2_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.223,
+          "widths_ms": [
+            1.64
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 2,
+          "latency_ms": 0.223,
+          "widths_ms": [
+            3.63,
+            4.13
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.223,
+          "widths_ms": [
+            21.2,
+            30.95
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 1.111,
+          "widths_ms": [
+            49.1
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.484,
+        "vin_max_V": 5.113,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.111,
+          1.539
+        ],
+        "core_pass": false,
+        "gap_resolved": true
+      },
+      "CFG3_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.258,
+          "widths_ms": [
+            1.8
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 2,
+          "latency_ms": 0.258,
+          "widths_ms": [
+            4.1,
+            3.78
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.258,
+          "widths_ms": [
+            21.47,
+            31.26
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 1.493,
+          "widths_ms": [
+            48.8
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.706,
+        "vin_max_V": 4.883,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.131,
+          1.52
+        ],
+        "core_pass": false,
+        "gap_resolved": true
+      },
+      "CFG4_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.304,
+          "widths_ms": [
+            1.94
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.303,
+          "widths_ms": [
+            4.99
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.303,
+          "widths_ms": [
+            21.84,
+            31.66
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 2.002,
+          "widths_ms": [
+            48.43
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.928,
+        "vin_max_V": 4.646,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.16,
+          1.494
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG5_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.361,
+          "widths_ms": [
+            2.03
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.359,
+          "widths_ms": [
+            16.13
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.357,
+          "widths_ms": [
+            22.35,
+            32.13
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 2.659,
+          "widths_ms": [
+            47.97
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.117,
+        "vin_max_V": 4.427,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.198,
+          1.465
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG6_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.431,
+          "widths_ms": [
+            2.0
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.424,
+          "widths_ms": [
+            16.51
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.42,
+          "widths_ms": [
+            23.05,
+            32.68
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 3.528,
+          "widths_ms": [
+            47.4
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.255,
+        "vin_max_V": 4.238,
+        "vin_min_V": 0.097,
+        "skin_vin_range_V": [
+          0.243,
+          1.437
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG7_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.301,
+          "widths_ms": [
+            2.03
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 2,
+          "latency_ms": 0.3,
+          "widths_ms": [
+            5.6,
+            5.41
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.299,
+          "widths_ms": [
+            21.94,
+            32.03
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 1.968,
+          "widths_ms": [
+            48.54
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.9,
+        "vin_max_V": 4.663,
+        "vin_min_V": 0.089,
+        "skin_vin_range_V": [
+          0.097,
+          1.453
+        ],
+        "core_pass": false,
+        "gap_resolved": true
+      },
+      "CFG8_PH0_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.359,
+          "widths_ms": [
+            2.12
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.355,
+          "widths_ms": [
+            16.54
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 2,
+          "latency_ms": 0.352,
+          "widths_ms": [
+            22.49,
+            32.52
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 2.592,
+          "widths_ms": [
+            48.15
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.087,
+        "vin_max_V": 4.436,
+        "vin_min_V": 0.089,
+        "skin_vin_range_V": [
+          0.136,
+          1.423
+        ],
+        "core_pass": true,
+        "gap_resolved": true
+      },
+      "CFG0_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 3,
+          "latency_ms": null,
+          "widths_ms": [
+            8.72,
+            6.01,
+            5.61
+          ]
+        },
+        "touch_0.5ms": {
+          "pulses": 2,
+          "latency_ms": 4.829,
+          "widths_ms": [
+            8.25,
+            5.94
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 2,
+          "latency_ms": 1.935,
+          "widths_ms": [
+            11.81,
+            6.34
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 3,
+          "latency_ms": 1.927,
+          "widths_ms": [
+            51.4,
+            6.09,
+            67.11
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_end": {
+          "pulses": 2,
+          "latency_ms": null,
+          "widths_ms": [
+            6.38,
+            5.67
+          ]
+        },
+        "idle_vin_min_V": -0.068,
+        "vin_max_V": 6.355,
+        "vin_min_V": -2.029,
+        "skin_vin_range_V": [
+          -0.204,
+          1.304
+        ],
+        "core_pass": false,
+        "gap_resolved": false
+      },
+      "CFG1_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 4.439,
+          "widths_ms": [
+            6.53
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.545,
+          "widths_ms": [
+            10.75
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.545,
+          "widths_ms": [
+            50.78
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.767,
+          "widths_ms": [
+            50.15
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.474,
+        "vin_max_V": 5.113,
+        "vin_min_V": 0.165,
+        "skin_vin_range_V": [
+          0.203,
+          1.578
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG2_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.241,
+          "widths_ms": [
+            10.92
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.241,
+          "widths_ms": [
+            11.09
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.241,
+          "widths_ms": [
+            51.14
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.402,
+          "widths_ms": [
+            50.53
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.474,
+        "vin_max_V": 5.113,
+        "vin_min_V": 0.077,
+        "skin_vin_range_V": [
+          0.111,
+          1.539
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG3_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.285,
+          "widths_ms": [
+            11.17
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.285,
+          "widths_ms": [
+            11.41
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.284,
+          "widths_ms": [
+            51.47
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.592,
+          "widths_ms": [
+            50.56
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.685,
+        "vin_max_V": 4.884,
+        "vin_min_V": 0.08,
+        "skin_vin_range_V": [
+          0.131,
+          1.519
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG4_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.34,
+          "widths_ms": [
+            11.43
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.339,
+          "widths_ms": [
+            11.8
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.339,
+          "widths_ms": [
+            51.87
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.83,
+          "widths_ms": [
+            50.57
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.886,
+        "vin_max_V": 4.647,
+        "vin_min_V": 0.083,
+        "skin_vin_range_V": [
+          0.16,
+          1.49
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG5_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.407,
+          "widths_ms": [
+            11.66
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.405,
+          "widths_ms": [
+            12.26
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.404,
+          "widths_ms": [
+            52.33
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 11.115,
+          "widths_ms": [
+            50.54
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.044,
+        "vin_max_V": 4.428,
+        "vin_min_V": 0.085,
+        "skin_vin_range_V": [
+          0.198,
+          1.452
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG6_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.485,
+          "widths_ms": [
+            11.79
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.479,
+          "widths_ms": [
+            12.76
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.476,
+          "widths_ms": [
+            52.85
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 11.45,
+          "widths_ms": [
+            50.49
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 2.146,
+        "vin_max_V": 4.239,
+        "vin_min_V": 0.087,
+        "skin_vin_range_V": [
+          0.243,
+          1.407
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG7_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.341,
+          "widths_ms": [
+            11.79
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.34,
+          "widths_ms": [
+            12.15
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.34,
+          "widths_ms": [
+            52.15
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.619,
+          "widths_ms": [
+            51.15
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.841,
+        "vin_max_V": 4.664,
+        "vin_min_V": 0.033,
+        "skin_vin_range_V": [
+          0.097,
+          1.448
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      },
+      "CFG8_PH90_CC100pF": {
+        "idle_start": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "touch_0.5ms": {
+          "pulses": 1,
+          "latency_ms": 0.408,
+          "widths_ms": [
+            12.02
+          ]
+        },
+        "touch_2ms": {
+          "pulses": 1,
+          "latency_ms": 0.404,
+          "widths_ms": [
+            12.62
+          ]
+        },
+        "touch_20ms_x2_5ms_gap": {
+          "pulses": 1,
+          "latency_ms": 0.403,
+          "widths_ms": [
+            52.62
+          ]
+        },
+        "skin_100k_50ms": {
+          "pulses": 1,
+          "latency_ms": 10.898,
+          "widths_ms": [
+            51.15
+          ]
+        },
+        "idle_end": {
+          "pulses": 0,
+          "latency_ms": null,
+          "widths_ms": []
+        },
+        "idle_vin_min_V": 1.992,
+        "vin_max_V": 4.437,
+        "vin_min_V": 0.042,
+        "skin_vin_range_V": [
+          0.136,
+          1.408
+        ],
+        "core_pass": true,
+        "gap_resolved": false
+      }
+    },
+    "chosen_cfg": 8,
+    "proposed_CC50pF_false_outputs_idle": {
+      "value": 0,
+      "units": "pulses (worst of 2 mains phases)",
+      "limit": "0",
+      "result": "PASS",
+      "note": "idle node min 1.533 V vs VT- 1.0 V; node range over run -0.188 to 4.834 V (LVC input abs max is typically 6.5 V - not checked against the datasheet here; ESD clamps ignored as specified)"
+    },
+    "proposed_CC50pF_touch_2ms_pulses": {
+      "value": [
+        2,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each",
+      "result": "FAIL",
+      "note": "widths [[2.65, 7.06], [11.4]] ms"
+    },
+    "proposed_CC50pF_touch_20ms_x2_with_5ms_gap_pulses": {
+      "value": [
+        2,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "2 each (gap resolved)",
+      "result": "FAIL",
+      "note": "widths [[20.58, 32.11], [51.4]] ms"
+    },
+    "proposed_CC50pF_skin_bridge_100k_pulses": {
+      "value": [
+        1,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each, no chatter",
+      "result": "PASS",
+      "note": "node range [[0.173, 0.93], [0.173, 0.927]] V; latency [1.903, 2.302] ms"
+    },
+    "proposed_CC50pF_touch_0p5ms_detected": {
+      "value": [
+        0,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "proposed_CC50pF_detection_latency": {
+      "value": [
+        1.444,
+        1.678
+      ],
+      "units": "ms (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "proposed_CC100pF_false_outputs_idle": {
+      "value": 5,
+      "units": "pulses (worst of 2 mains phases)",
+      "limit": "0",
+      "result": "FAIL",
+      "note": "idle node min -0.068 V vs VT- 1.0 V; node range over run -2.296 to 6.355 V (LVC input abs max is typically 6.5 V - not checked against the datasheet here; ESD clamps ignored as specified)"
+    },
+    "proposed_CC100pF_touch_2ms_pulses": {
+      "value": [
+        3,
+        2
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each",
+      "result": "FAIL",
+      "note": "widths [[1.54, 9.68, 6.14], [11.81, 6.34]] ms"
+    },
+    "proposed_CC100pF_touch_20ms_x2_with_5ms_gap_pulses": {
+      "value": [
+        3,
+        3
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "2 each (gap resolved)",
+      "result": "FAIL",
+      "note": "widths [[19.63, 32.47, 6.47], [51.4, 6.09, 67.11]] ms"
+    },
+    "proposed_CC100pF_skin_bridge_100k_pulses": {
+      "value": [
+        2,
+        0
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each, no chatter",
+      "result": "FAIL",
+      "note": "node range [[-0.204, 1.306], [-0.204, 1.304]] V; latency [1.191, None] ms"
+    },
+    "proposed_CC100pF_touch_0p5ms_detected": {
+      "value": [
+        2,
+        2
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "proposed_CC100pF_detection_latency": {
+      "value": [
+        1.553,
+        1.935
+      ],
+      "units": "ms (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "proposed_patient_dc_current_worst_calc": {
+      "value": 3.12,
+      "units": "uA",
+      "limit": "<= 10 uA",
+      "result": "PASS",
+      "note": "calculation: 3.4 V rail (3.315 V + 2.5 %), resistors -1 %"
+    },
+    "proposed_patient_dc_current_calc": {
+      "value": 3.0,
+      "units": "uA",
+      "limit": "<= 10 uA design target (IEC 60601-1 type BF DC patient auxiliary current figure; not a certification)",
+      "result": "PASS",
+      "note": "calculation 3.3 V / (RS + RPU), RS 100 k, RPU 1000 k"
+    },
+    "revised_CC50pF_false_outputs_idle": {
+      "value": 0,
+      "units": "pulses (worst of 2 mains phases)",
+      "limit": "0",
+      "result": "PASS",
+      "note": "idle node min 2.580 V vs VT- 1.0 V; node range over run 0.089 to 3.870 V (LVC input abs max is typically 6.5 V - not checked against the datasheet here; ESD clamps ignored as specified)"
+    },
+    "revised_CC50pF_touch_2ms_pulses": {
+      "value": [
+        1,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each",
+      "result": "PASS",
+      "note": "widths [[14.02], [11.65]] ms"
+    },
+    "revised_CC50pF_touch_20ms_x2_with_5ms_gap_pulses": {
+      "value": [
+        2,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "2 each (gap resolved)",
+      "result": "FAIL",
+      "note": "widths [[24.02, 31.16], [52.34]] ms"
+    },
+    "revised_CC50pF_skin_bridge_100k_pulses": {
+      "value": [
+        1,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each, no chatter",
+      "result": "PASS",
+      "note": "node range [[0.454, 1.105], [0.454, 1.09]] V; latency [3.745, 9.83] ms"
+    },
+    "revised_CC50pF_touch_0p5ms_detected": {
+      "value": [
+        1,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "revised_CC50pF_detection_latency": {
+      "value": [
+        0.341,
+        0.369
+      ],
+      "units": "ms (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "revised_CC100pF_false_outputs_idle": {
+      "value": 0,
+      "units": "pulses (worst of 2 mains phases)",
+      "limit": "0",
+      "result": "PASS",
+      "note": "idle node min 1.992 V vs VT- 1.0 V; node range over run 0.042 to 4.437 V (LVC input abs max is typically 6.5 V - not checked against the datasheet here; ESD clamps ignored as specified)"
+    },
+    "revised_CC100pF_touch_2ms_pulses": {
+      "value": [
+        1,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each",
+      "result": "PASS",
+      "note": "widths [[16.54], [12.62]] ms"
+    },
+    "revised_CC100pF_touch_20ms_x2_with_5ms_gap_pulses": {
+      "value": [
+        2,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "2 each (gap resolved)",
+      "result": "FAIL",
+      "note": "widths [[22.49, 32.52], [52.62]] ms"
+    },
+    "revised_CC100pF_skin_bridge_100k_pulses": {
+      "value": [
+        1,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "1 each, no chatter",
+      "result": "PASS",
+      "note": "node range [[0.136, 1.423], [0.136, 1.408]] V; latency [2.592, 10.898] ms"
+    },
+    "revised_CC100pF_touch_0p5ms_detected": {
+      "value": [
+        1,
+        1
+      ],
+      "units": "pulses (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "revised_CC100pF_detection_latency": {
+      "value": [
+        0.355,
+        0.404
+      ],
+      "units": "ms (phase 0, 90 deg)",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "revised_patient_dc_current_worst_calc": {
+      "value": 9.28,
+      "units": "uA",
+      "limit": "<= 10 uA",
+      "result": "PASS",
+      "note": "calculation: 3.4 V rail (3.315 V + 2.5 %), resistors -1 %"
+    },
+    "revised_patient_dc_current_calc": {
+      "value": 8.92,
+      "units": "uA",
+      "limit": "<= 10 uA design target (IEC 60601-1 type BF DC patient auxiliary current figure; not a certification)",
+      "result": "PASS",
+      "note": "calculation 3.3 V / (RS + RPU), RS 10 k, RPU 360 k"
+    }
+  },
+  "SIM06_haptic_erm": {
+    "duty_sweep_vmotor_avg_V": {
+      "VSYS3.7": {
+        "0.6": 2.553,
+        "0.7": 2.84,
+        "0.8": 3.101,
+        "0.9": 3.329
+      },
+      "VSYS4.6": {
+        "0.6": 3.178,
+        "0.7": 3.532,
+        "0.8": 3.856,
+        "0.9": 4.138
+      }
+    },
+    "VSYS3.7_duty": {
+      "value": 76.0,
+      "units": "%",
+      "limit": "chosen for ~3.0 V average motor voltage",
+      "result": "INFO"
+    },
+    "VSYS3.7_motor_avg_voltage": {
+      "value": 2.998,
+      "units": "V",
+      "limit": "3.0 V +/- 0.1 V",
+      "result": "PASS"
+    },
+    "VSYS3.7_motor_avg_current": {
+      "value": 60.0,
+      "units": "mA",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "VSYS3.7_motor_current_ripple_pp": {
+      "value": 88.5,
+      "units": "mA p-p",
+      "limit": "report",
+      "result": "INFO",
+      "note": "L/R = 6 us << 50 us period, so the current is near-discontinuous"
+    },
+    "VSYS3.7_drain_peak": {
+      "value": 3.983,
+      "units": "V",
+      "limit": "< 20 V (AO3400A VDS 30 V abs max)",
+      "result": "PASS"
+    },
+    "VSYS3.7_vsys_local_ripple_pp": {
+      "value": 4.53,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "VSYS3.7_vsys_avg_current": {
+      "value": 56.4,
+      "units": "mA",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "VSYS3.7_gate_rise_10_90": {
+      "value": 162.6,
+      "units": "ns",
+      "limit": "report",
+      "result": "INFO",
+      "note": "includes Miller plateau; 100 ohm gate resistor"
+    },
+    "VSYS3.7_gate_fall_90_10": {
+      "value": 176.6,
+      "units": "ns",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "VSYS4.6_duty": {
+      "value": 55.00000000000001,
+      "units": "%",
+      "limit": "chosen for ~3.0 V average motor voltage",
+      "result": "INFO"
+    },
+    "VSYS4.6_motor_avg_voltage": {
+      "value": 2.985,
+      "units": "V",
+      "limit": "3.0 V +/- 0.1 V",
+      "result": "PASS"
+    },
+    "VSYS4.6_motor_avg_current": {
+      "value": 59.7,
+      "units": "mA",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "VSYS4.6_motor_current_ripple_pp": {
+      "value": 122.9,
+      "units": "mA p-p",
+      "limit": "report",
+      "result": "INFO",
+      "note": "L/R = 6 us << 50 us period, so the current is near-discontinuous"
+    },
+    "VSYS4.6_drain_peak": {
+      "value": 4.896,
+      "units": "V",
+      "limit": "< 20 V (AO3400A VDS 30 V abs max)",
+      "result": "PASS"
+    },
+    "VSYS4.6_vsys_local_ripple_pp": {
+      "value": 6.36,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "VSYS4.6_vsys_avg_current": {
+      "value": 53.8,
+      "units": "mA",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "VSYS4.6_gate_rise_10_90": {
+      "value": 166.3,
+      "units": "ns",
+      "limit": "report",
+      "result": "INFO",
+      "note": "includes Miller plateau; 100 ohm gate resistor"
+    },
+    "VSYS4.6_gate_fall_90_10": {
+      "value": 180.0,
+      "units": "ns",
+      "limit": "report",
+      "result": "INFO"
+    }
+  },
+  "SIM07_buzzer": {
+    "drain_peak": {
+      "value": 4.231,
+      "units": "V",
+      "limit": "< 20 V (AO3400A VDS 30 V abs max)",
+      "result": "PASS"
+    },
+    "rail_3v3_ripple_pp": {
+      "value": 9.05,
+      "units": "mV p-p",
+      "limit": "report",
+      "result": "INFO",
+      "note": "+3V3 modelled as ideal 3.315 V behind 50 mohm with 22 uF (10 uF eff) local; converter loop not included"
+    },
+    "buzzer_peak_current": {
+      "value": 178.5,
+      "units": "mA",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "buzzer_avg_current": {
+      "value": 84.0,
+      "units": "mA",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "flyback_peak_current": {
+      "value": 178.0,
+      "units": "mA",
+      "limit": "< 1N4148 rating (Iave 200 mA model)",
+      "result": "INFO"
+    }
+  },
+  "SIM03_power_path": {
+    "proposed_vsys_on_usb": {
+      "value": 4.648,
+      "units": "V",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "proposed_vsys_min_after_unplug": {
+      "value": 2.949,
+      "units": "V",
+      "limit": ">= 2.95 V (LTC3536 VIN min 1.8 V; report)",
+      "result": "INFO"
+    },
+    "proposed_vsys_on_battery_14ms": {
+      "value": 2.952,
+      "units": "V",
+      "limit": "about VBAT - I x RDS(on) (Q1 on)",
+      "result": "FAIL",
+      "note": "below ~3.0 V means Q1 is still off and VSYS is fed by its body diode"
+    },
+    "proposed_v3v3_min": {
+      "value": 3.1907,
+      "units": "V",
+      "limit": ">= 3.149 V (-5 %)",
+      "result": "PASS",
+      "note": "-3.75 %"
+    },
+    "proposed_v3v3_max": {
+      "value": 3.5844,
+      "units": "V",
+      "limit": "<= 3.481 V (+5 %)",
+      "result": "FAIL",
+      "note": "8.13 %"
+    },
+    "proposed_v3v3_unplug_window_min_max": {
+      "value": [
+        3.1907,
+        3.3316
+      ],
+      "units": "V",
+      "limit": "3.149 - 3.481 V",
+      "result": "PASS"
+    },
+    "proposed_v3v3_replug_window_min_max": {
+      "value": [
+        3.2911,
+        3.5844
+      ],
+      "units": "V",
+      "limit": "3.149 - 3.481 V",
+      "result": "FAIL"
+    },
+    "proposed_q1_turn_on_delay": {
+      "value": null,
+      "units": "ms",
+      "limit": "report (body diode conducts until then)",
+      "result": "INFO",
+      "note": "not within the 10 ms unplugged window"
+    },
+    "proposed_reverse_current_into_vbus_avg": {
+      "value": 60.723,
+      "units": "uA",
+      "limit": "report (positive = VBUS -> VSYS, negative = into VBUS)",
+      "result": "INFO",
+      "note": "D40 average over 6-15 ms; switching-frequency displacement peaks via D40 capacitance: min -4.52 mA"
+    },
+    "proposed_reverse_current_into_vbus_end": {
+      "value": 0.461,
+      "units": "uA",
+      "limit": "report (14-15 ms average, negative = into VBUS)",
+      "result": "INFO"
+    },
+    "proposed_vbus_at_14ms": {
+      "value": 2.952,
+      "units": "V",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "rejected_bat54_attempt_vsys_on_usb": {
+      "value": 4.648,
+      "units": "V",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "rejected_bat54_attempt_vsys_min_after_unplug": {
+      "value": 2.949,
+      "units": "V",
+      "limit": ">= 2.95 V (LTC3536 VIN min 1.8 V; report)",
+      "result": "INFO"
+    },
+    "rejected_bat54_attempt_vsys_on_battery_14ms": {
+      "value": 2.952,
+      "units": "V",
+      "limit": "about VBAT - I x RDS(on) (Q1 on)",
+      "result": "FAIL",
+      "note": "below ~3.0 V means Q1 is still off and VSYS is fed by its body diode"
+    },
+    "rejected_bat54_attempt_v3v3_min": {
+      "value": 3.1902,
+      "units": "V",
+      "limit": ">= 3.149 V (-5 %)",
+      "result": "PASS",
+      "note": "-3.76 %"
+    },
+    "rejected_bat54_attempt_v3v3_max": {
+      "value": 3.5849,
+      "units": "V",
+      "limit": "<= 3.481 V (+5 %)",
+      "result": "FAIL",
+      "note": "8.14 %"
+    },
+    "rejected_bat54_attempt_v3v3_unplug_window_min_max": {
+      "value": [
+        3.1902,
+        3.3312
+      ],
+      "units": "V",
+      "limit": "3.149 - 3.481 V",
+      "result": "PASS"
+    },
+    "rejected_bat54_attempt_v3v3_replug_window_min_max": {
+      "value": [
+        3.291,
+        3.5849
+      ],
+      "units": "V",
+      "limit": "3.149 - 3.481 V",
+      "result": "FAIL"
+    },
+    "rejected_bat54_attempt_q1_turn_on_delay": {
+      "value": null,
+      "units": "ms",
+      "limit": "report (body diode conducts until then)",
+      "result": "INFO",
+      "note": "not within the 10 ms unplugged window"
+    },
+    "rejected_bat54_attempt_reverse_current_into_vbus_avg": {
+      "value": 61.41,
+      "units": "uA",
+      "limit": "report (positive = VBUS -> VSYS, negative = into VBUS)",
+      "result": "INFO",
+      "note": "D40 average over 6-15 ms; switching-frequency displacement peaks via D40 capacitance: min -4.54 mA"
+    },
+    "rejected_bat54_attempt_reverse_current_into_vbus_end": {
+      "value": 1.112,
+      "units": "uA",
+      "limit": "report (14-15 ms average, negative = into VBUS)",
+      "result": "INFO"
+    },
+    "rejected_bat54_attempt_vbus_at_14ms": {
+      "value": 2.953,
+      "units": "V",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "final_vsys_on_usb": {
+      "value": 4.648,
+      "units": "V",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "final_vsys_min_after_unplug": {
+      "value": 2.951,
+      "units": "V",
+      "limit": ">= 2.95 V (LTC3536 VIN min 1.8 V; report)",
+      "result": "INFO"
+    },
+    "final_vsys_on_battery_14ms": {
+      "value": 3.651,
+      "units": "V",
+      "limit": "about VBAT - I x RDS(on) (Q1 on)",
+      "result": "PASS",
+      "note": "below ~3.0 V means Q1 is still off and VSYS is fed by its body diode"
+    },
+    "final_v3v3_min": {
+      "value": 3.2617,
+      "units": "V",
+      "limit": ">= 3.149 V (-5 %)",
+      "result": "PASS",
+      "note": "-1.61 %"
+    },
+    "final_v3v3_max": {
+      "value": 3.4187,
+      "units": "V",
+      "limit": "<= 3.481 V (+5 %)",
+      "result": "PASS",
+      "note": "3.13 %"
+    },
+    "final_v3v3_unplug_window_min_max": {
+      "value": [
+        3.2617,
+        3.3475
+      ],
+      "units": "V",
+      "limit": "3.149 - 3.481 V",
+      "result": "PASS"
+    },
+    "final_v3v3_replug_window_min_max": {
+      "value": [
+        3.291,
+        3.4187
+      ],
+      "units": "V",
+      "limit": "3.149 - 3.481 V",
+      "result": "PASS"
+    },
+    "final_q1_turn_on_delay": {
+      "value": 5.5093,
+      "units": "ms",
+      "limit": "report (body diode conducts until then)",
+      "result": "INFO",
+      "note": "VBAT - VSYS < 0.1 V"
+    },
+    "final_reverse_current_into_vbus_avg": {
+      "value": -7.044,
+      "units": "uA",
+      "limit": "report (positive = VBUS -> VSYS, negative = into VBUS)",
+      "result": "INFO",
+      "note": "D40 average over 6-15 ms; switching-frequency displacement peaks via D40 capacitance: min -4.29 mA"
+    },
+    "final_reverse_current_into_vbus_end": {
+      "value": -31.707,
+      "units": "uA",
+      "limit": "report (14-15 ms average, negative = into VBUS)",
+      "result": "INFO"
+    },
+    "final_vbus_at_14ms": {
+      "value": 2.092,
+      "units": "V",
+      "limit": "report",
+      "result": "INFO"
+    },
+    "replug_C41_22_uF": {
+      "value": [
+        3.2801,
+        3.5265
+      ],
+      "units": "V (+3V3 min, max)",
+      "limit": "3.149 - 3.481 V",
+      "result": "FAIL",
+      "note": "D40 peak 7.38 A, VSYS peak 5.570 V"
+    },
+    "replug_C41_2_x_22_uF": {
+      "value": [
+        3.2906,
+        3.4931
+      ],
+      "units": "V (+3V3 min, max)",
+      "limit": "3.149 - 3.481 V",
+      "result": "FAIL",
+      "note": "D40 peak 8.18 A, VSYS peak 5.277 V"
+    },
+    "replug_C41_22_uF_+_100_uF_bulk": {
+      "value": [
+        3.2911,
+        3.4249
+      ],
+      "units": "V (+3V3 min, max)",
+      "limit": "3.149 - 3.481 V",
+      "result": "PASS",
+      "note": "D40 peak 8.87 A, VSYS peak 4.650 V"
+    },
+    "gate_study_R43_1k_q1_on_delay": {
+      "value": 2.18,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO",
+      "note": "USB current in R43 5.00 mA; VBUS at 400 ms = 0.032 V"
+    },
+    "gate_study_R43_2.2k_q1_on_delay": {
+      "value": 4.47,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO",
+      "note": "USB current in R43 2.27 mA; VBUS at 400 ms = 0.069 V"
+    },
+    "gate_study_R43_10k_q1_on_delay": {
+      "value": 18.93,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO",
+      "note": "USB current in R43 0.50 mA; VBUS at 400 ms = 0.344 V"
+    },
+    "gate_study_R43_100k_q1_on_delay": {
+      "value": null,
+      "units": "ms",
+      "limit": "report",
+      "result": "INFO",
+      "note": "not within 398 ms; VBUS at 400 ms = 2.555 V"
+    }
+  },
+  "SIM00_mosfet_models": {
+    "AO3401A_rds_on_vgs_-4.5V": {
+      "value": 49.95,
+      "units": "mohm",
+      "limit": "about 50 mohm",
+      "result": "PASS"
+    },
+    "AO3401A_rds_on_vgs_-2.5V": {
+      "value": 69.71,
+      "units": "mohm",
+      "limit": "about 70 mohm",
+      "result": "PASS"
+    },
+    "AO3401A_vgs_th_250uA": {
+      "value": -0.905,
+      "units": "V",
+      "limit": "about -0.9 V",
+      "result": "PASS"
+    },
+    "AO3400A_rds_on_vgs_4.5V": {
+      "value": 30.01,
+      "units": "mohm",
+      "limit": "about 30 mohm",
+      "result": "PASS"
+    },
+    "AO3400A_rds_on_vgs_2.5V": {
+      "value": 45.11,
+      "units": "mohm",
+      "limit": "about 45 mohm",
+      "result": "PASS"
+    },
+    "AO3400A_vgs_th_250uA": {
+      "value": 1.004,
+      "units": "V",
+      "limit": "about 1.0 V",
+      "result": "PASS"
+    }
+  }
+}

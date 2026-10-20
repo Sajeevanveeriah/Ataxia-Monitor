@@ -1,0 +1,19 @@
+* SIM04c - VW-MTC1 Hall front end - 1.2 MHz switching ripple
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+* Purpose : 10 mV p-p 1.2 MHz ripple riding on the sensor output (from the
+*           3V3 rail, ratiometric sensor). Compare ripple at the ADC input
+*           for the old design (direct) and new filter. Short run with a
+*           10 ns maximum step.
+.include vw_hall_afe.inc
+Vdd   vdd 0 3.3
+Bs    sn 0 V=1.65+5m*sin(2*pi*1.2Meg*time)
+Rs_old sn adc_old 100
+Rs_new sn hall_new 100
+XFN   hall_new adc_new vdd hall_lpf
+.ic V(xfn:n1)=1.65 V(xfn:n2)=1.65 V(adc_new)=1.65
+.save V(adc_old) V(adc_new)
+.tran 0 22m 0 10n
+.meas TRAN rpp_old PP V(adc_old) FROM 20m TO 22m
+.meas TRAN rpp_new PP V(adc_new) FROM 20m TO 22m
+.meas TRAN rms_old RMS V(adc_old)-1.65 FROM 20m TO 22m
+.end

@@ -1,0 +1,36 @@
+* SIM02b - VW-MTC1 USB hot-plug transient at the LTC4054 VCC input
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : a live 5 V USB source is plugged in through a cable modelled as
+*           1 uH + 100 mohm. Compare the peak VBUS overshoot for:
+*   (i)   C20 10 uF ceramic alone (ESR 3 mohm)
+*   (ii)  C20 10 uF in series with 1.5 ohm (LTC4054 datasheet damping)
+*   (iii) as (ii) plus C21 1 uF at the VCC pin (the actual VW-MTC1 layout)
+* The three cases are independent copies of the circuit in one netlist.
+* Step: 0 -> 5 V with 100 ns rise (contact bounce ignored). No charger load
+* (worst case for ringing; the LTC4054 draws little before it starts).
+* ASSUMPTION: 10 uF nominal; X5R DC-bias derating at 5 V would lower the
+* effective capacitance and raise the ring frequency.
+
+Vusb   usb 0 PWL(0 0 10u 0 10.1u 5)
+* (i)
+R1c    usb a1 100m
+L1c    a1 vb1 1u
+C1     vb1 0 10u Rser=3m
+* (ii)
+R2c    usb a2 100m
+L2c    a2 vb2 1u
+C2     vb2 n2 10u Rser=3m
+R2     n2 0 1.5
+* (iii)
+R3c    usb a3 100m
+L3c    a3 vb3 1u
+C3     vb3 n3 10u Rser=3m
+R3     n3 0 1.5
+C3b    vb3 0 1u Rser=5m
+
+.tran 0 200u 0 5n
+.meas TRAN vpk_i   MAX V(vb1)
+.meas TRAN vpk_ii  MAX V(vb2)
+.meas TRAN vpk_iii MAX V(vb3)
+.end

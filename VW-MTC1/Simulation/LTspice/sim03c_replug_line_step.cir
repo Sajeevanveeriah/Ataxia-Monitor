@@ -1,0 +1,53 @@
+* SIM03c - VW-MTC1 USB replug line step on the +3V3 rail (short run)
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : SIM03a showed +3V3 overshoot when USB is re-plugged and VSYS
+*           steps up from battery level to ~4.65 V in about 10 us. This
+*           short run isolates that event (battery-only start, replug at
+*           2.0 ms) so mitigation options can be compared quickly:
+*   OPT 0 : revised power path (SIM03b), C41 = 22 uF (10 uF eff)
+*   OPT 1 : C41 = 2 x 22 uF on VSYS (20 uF eff)
+*   OPT 2 : C41 = 22 uF + C42 100 uF low-ESR bulk (polymer/tantalum,
+*           100 uF, ESR 50 mohm) on VSYS
+* Other values as SIM03b (D41 BAT54 gate feed, Q1 AO3401A, D40 1N5819).
+* In this circuit Q1 stays off on battery, so VSYS steps from the body-diode
+* level (~2.95 V) to ~4.65 V: the largest line step the converter can see,
+* i.e. a worst case for the final circuit (where VSYS starts near 3.68 V).
+.lib LTC3536.sub
+.include vw_3v3_buckboost.inc
+.include vw_models.lib
+.model 1N5819 D(Is=31.7u Rs=.051 N=1.373 Cjo=110p M=.35 Eg=.69 Xti=2 Iave=1 Vpk=40 mfg=OnSemi type=Schottky)
+.model BAT54 D(Is=.1u Rs=2.2 N=1 Cjo=12p M=.3 Eg=.69 Xti=2 Iave=300m Vpk=30 mfg=Vishay type=Schottky)
+.model SWUSB SW(Ron=10m Roff=100Meg Vt=0.5 Vh=0)
+.param OPT=0
+.param C41E={table(OPT,0,10u,1,20u,2,10u)}
+.param C42E={table(OPT,0,1p,1,1p,2,100u)}
+.step param OPT list 0 1 2
+
+Vusb   usb 0 5
+Rcab   usb a1 100m
+Lcab   a1 a2 1u Rpar=50
+S_USB  a2 vbus plug 0 SWUSB
+Vplug  plug 0 PWL(0 0 2m 0 2.0001m 1)
+C40    vbus 0 10u Rser=3m
+R41    vbus vsense 100k
+R42    vsense 0 100k
+D40    vbus vsys 1N5819
+D41    vbus gate BAT54
+MQ1    vbat gate vsys vsys AO3401A
+R43    gate 0 100k
+C41    vsys 0 {C41E} Rser=3m
+C42    vsys 0 {C42E} Rser=50m
+Vcell  cell 0 3.7
+Rcell  cell vbat 50m
+XBB    vsys out 0 ofilt vw_3v3_bb
+Iload  out 0 300m
+
+.save V(vbus) V(vsys) V(ofilt) I(D40)
+.tran 0 3m 0 startup
+.meas TRAN v3_pre AVG V(ofilt) FROM 1.8m TO 2m
+.meas TRAN v3_max MAX V(ofilt) FROM 2m TO 3m
+.meas TRAN v3_min MIN V(ofilt) FROM 2m TO 3m
+.meas TRAN id40_pk MAX I(D40) FROM 2m TO 3m
+.meas TRAN vsys_pk MAX V(vsys) FROM 2m TO 3m
+.end
