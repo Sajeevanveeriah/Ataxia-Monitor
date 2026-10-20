@@ -1,0 +1,25 @@
+# Local toolchains, caches and build products
+.venv/
+.tools/
+.verification/
+.gradle/
+**/build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage*
+htmlcov/
+local.properties
+.idea/
+
+# Regenerable simulator data and editor state
+*.raw
+*.kicad_prl
+*-backups/
+~*
+
+# Original thesis and the previously delivered package stay local.
+/20250903-217550968-SEJ446-Thesis-Rev03(1).pdf
+/20261019-VW-MTC1-Package-Rev00.zip

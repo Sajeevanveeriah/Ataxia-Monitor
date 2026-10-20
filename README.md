@@ -1,187 +1,113 @@
-# Ataxia Monitor
+# Ataxia Device and Monitor
 
-Ataxia Monitor is an Android prototype for recording motion and distance signals from a wire-maze style measurement setup. It collects Android sensor events, converts them into a small domain model, derives live traversal metrics and persists both the session record and each sensor sample in Room.
+This repository contains the VW-MTC1 MazeTrack controller design, its LTspice analysis tools, and the Android monitoring prototype. The controller package is the current hardware setup. The Android app still reads phone sensors; a board-to-app transport and executable board firmware have not been implemented.
 
-The repository demonstrates the software pipeline around data capture and review. The current fusion logic is deliberately simple and should be treated as an engineering prototype, not as evidence that the resulting metrics are clinically validated measurements.
+## Project map
 
-## System flow
-
-```text
-Android sensors
-    |
-    v
-SensorCollector
-    |
-    v
-SensorSample
-    |
-    +--------------------+
-    |                    |
-    v                    v
-SensorFusionEngine   raw sample values
-    |                    |
-    v                    |
-TraversalMetrics         |
-    |                    |
-    +----------+---------+
-               |
-               v
-        SensorRepository
-               |
-        +------+------+
-        |             |
-        v             v
-   Room database   live StateFlow
-        |             |
-        v             v
- session history   Compose UI
-```
-
-`SensorRepository` is the orchestration boundary. It starts and stops collection, resets the fusion state between sessions, persists readings on the IO dispatcher and exposes live/session state to the ViewModel.
-
-## Source map
-
-| Area | Responsibility |
+| Path | Contents |
 | --- | --- |
-| `AtaxiaMonitorApp.kt` | Creates the application-scoped dependency graph: Room database, `SensorManager`, collector, fusion engine and repository. |
-| `MainActivity.kt` | Compose presentation and interaction layer. It binds the UI to `MainViewModel` state and actions. |
-| `data/sensor/SensorCollector.kt` | Registers available Android sensors and converts callback events into a `Flow<SensorSample>`. |
-| `data/sensor/SensorFusionEngine.kt` | Stateful metric derivation for distance, offset, angular velocity and a smoothed acceleration-derived tremor proxy. |
-| `data/repository/SensorRepository.kt` | Session lifecycle, collection job ownership, persistence and live-state publication. |
-| `data/local/` | Room schema, DAOs and session/sample relationships. |
-| `data/mapper/` | Conversion between persisted Room objects and domain models. |
-| `domain/model/` | Sensor, metric and session types used outside persistence. |
-| `ui/MainViewModel.kt` | Combines repository streams with participant input into a single `MainUiState`. |
+| `VW-MTC1/Hardware/` | KiCad 10 sources, fabrication exports and archived ERC/DRC reports |
+| `VW-MTC1/Firmware/` | ESP32-S3 pin-map header; no flashable firmware application yet |
+| `VW-MTC1/Simulation/` | LTspice circuits, archived results/plots and Python analysis tools |
+| `VW-MTC1/Docs/` | Original Rev00 design report, datasheet and images |
+| `app/` | Android app, local JVM tests and [app documentation](app/README.md) |
+| `tests/` | Python unit tests using synthetic waveforms and mocked simulator processes |
+| `scripts/check_project.py` | Rebuild generated schematics and summary in `build/` |
 
-## Sensor handling
+The board has not been physically built or measured. Saved simulation and CAD reports are historical evidence, not a fresh hardware acceptance result. See [VW-MTC1/README.md](VW-MTC1/README.md) and the design report for outstanding engineering checks.
 
-The collector requests:
+## Python build and tests from a clean checkout
 
-- gyroscope
-- accelerometer
-- rotation vector
-- time-of-flight on supported Android versions in the current implementation
-- proximity as the fallback path used by the current implementation when the time-of-flight branch is not selected
+Use Python 3.12 or newer. The development dependency set is pinned in `requirements-dev.txt`. NumPy 2 or newer is required because the analysis uses `numpy.trapezoid`.
 
-Sensors that are unavailable are skipped rather than failing the complete stream.
+Windows PowerShell:
 
-Each Android callback copies the sensor value array before emitting it. That is important because Android may reuse the framework-provided event buffer after the callback returns.
-
-`callbackFlow` owns the listener lifecycle. Every listener registered by a collection is unregistered in `awaitClose`, so cancelling the repository's collection job also releases the sensor subscriptions.
-
-## Fusion behaviour
-
-`SensorFusionEngine` is stateful. It must be reset at the beginning of each recording session.
-
-### Distance and radial offset
-
-The current implementation expects the first two values of a time-of-flight-domain sample to represent:
-
-1. along-path distance in millimetres
-2. radial offset in millimetres
-
-The first distance reading seeds the running total. Positive deltas are accumulated. A negative delta is treated as a sensor reset or new-lap condition and replaces the running total with the new reading.
-
-That behaviour is an explicit modelling assumption. If the physical sensor reports signed motion, wrap-around or calibrated absolute position differently, update the algorithm and its tests rather than changing the data interpretation silently.
-
-### Angular velocity
-
-The gyroscope metric is the Euclidean magnitude of the three angular-rate components:
-
-```text
-omega = sqrt(x^2 + y^2 + z^2)
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pip install --no-build-isolation -e .
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m build --no-isolation
+.\.venv\Scripts\python.exe scripts/check_project.py
 ```
 
-The result therefore represents rotational-rate magnitude rather than orientation about a specific maze axis.
+Linux/macOS:
 
-### Acceleration-derived tremor proxy
-
-The accelerometer path computes vector magnitude, subtracts standard Earth gravity and exponentially smooths the absolute residual:
-
-```text
-linear = abs(|a| - g)
-smoothed = 0.8 * previous + 0.2 * linear
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python -m pip install --no-build-isolation -e .
+.venv/bin/python -m pytest -q
+.venv/bin/python -m build --no-isolation
+.venv/bin/python scripts/check_project.py
 ```
 
-The 0.8/0.2 weighting is a fixed smoothing choice in the prototype. It is not currently loaded from calibration data and should not be changed without updating the interpretation, verification data and tests.
+The build produces a Python wheel and source archive in `dist/`. It packages the tools, not the large hardware exports. The generation check writes to `build/vw-mtc1/` and preserves the supplied simulation evidence. Its summary is rebuilt from stored results; it does not claim a fresh simulation.
 
-## Session lifecycle
+For line and branch coverage:
 
-`SensorRepository.startSession` intentionally ignores a second start request while a session is already active.
-
-Starting a session:
-
-1. resets fusion state
-2. clears the live metric
-3. inserts a new Room session
-4. publishes the generated session ID
-5. starts sensor collection
-
-Stopping a session:
-
-1. clears the active session ID
-2. cancels the sensor collection job
-3. records the session end time
-4. clears the live metric
-
-Samples are persisted with both their raw value payload and the metrics produced at that point in the stream. This makes later analysis possible without needing to reconstruct the exact live fusion state from UI state.
-
-## Persistence
-
-The Room database is `ataxia-monitor.db` and currently uses schema version 1.
-
-`SensorSampleEntity` references `SessionEntity` through `session_id` with `ON DELETE CASCADE`. Deleting a session at the database level therefore removes its associated samples as part of the same relationship contract.
-
-Indexes on `session_id` and `timestamp` support the two principal lookup dimensions: readings belonging to one session and chronological sample access.
-
-The current database configuration has `exportSchema = false`. If migration history becomes important, enable schema export and add explicit migrations before incrementing the database version.
-
-## UI state
-
-`MainViewModel` combines five sources into `MainUiState`:
-
-- participant identifier input
-- notes input
-- live traversal metrics
-- stored session summaries
-- active session ID
-
-The active session ID is converted into the UI-facing `isSessionActive` flag. This keeps the Compose layer dependent on presentation state rather than repository implementation details.
-
-If the operator leaves the patient identifier blank, the ViewModel generates a timestamp-based placeholder. Treat that as a convenience for prototype use, not as a durable participant identity strategy.
-
-## Build and run
-
-Open the project in Android Studio with JDK 17. The repository targets Android devices and should be exercised on physical hardware when validating sensor behaviour.
-
-When a Gradle wrapper is present:
-
-```bash
-./gradlew assembleDebug
-./gradlew test
+```sh
+python -m pytest --cov=vw_mtc1 --cov-report=term-missing
 ```
 
-The JVM tests should remain focused on deterministic fusion and mapping behaviour. Hardware availability, sensor timing and end-to-end collection require device or instrumentation validation.
+Coverage reports include the full analysis scripts as well as the reusable helpers. Hardware-free unit tests do not execute every full-circuit analysis path.
 
-## Verification priorities
+A host C++ syntax check for the pin-map header is also available:
 
-When changing the sensor pipeline, verify at least:
+```sh
+g++ -std=c++17 -Wall -Wextra -Werror -fsyntax-only tests/pinmap_compile.cpp
+```
 
-- a session reset removes state from the previous session
-- missing sensors do not prevent other sensors from streaming
-- collector cancellation unregisters listeners
-- distance accumulation handles the documented reset rule
-- gyroscope magnitude remains dimensionally consistent with the input angular-rate units
-- the acceleration filter uses the intended weighting and gravity reference
-- persistence links each sample to the correct session
-- stopping a session prevents further samples from being associated with it
-- UI active/inactive state follows repository session state
+This checks header compilation only. It does not produce ESP32 firmware.
 
-## Maintenance notes
+## Running LTspice
 
-- Do not interpret `SensorType.TIME_OF_FLIGHT` as proof of a particular physical sensor interface. The collector-to-domain mapping is an adapter and should match the actual hardware path used by the project.
-- Rotation-vector events are collected but are not currently consumed by the fusion engine.
-- The repository writes every collected sample to Room. Higher sensor rates may require batching or another persistence strategy if profiling shows write pressure.
-- `applicationScope` intentionally outlives activities and ViewModels. Any work launched there must have an explicit lifecycle or cancellation owner.
-- Metric names shown in the UI should stay aligned with the algorithms that produce them. If an algorithm changes meaning, update the domain name and documentation rather than only changing its implementation.
-- Patient identifiers and notes are stored locally as plain Room fields in the current prototype. Any real deployment involving regulated or sensitive study data requires a separate security, consent, retention and access-control design.
+LTspice 26.1.1 was used for the supplied Rev00 evidence. Install LTspice separately, with its standard model library. No simulator is needed for the unit tests or Python package build.
+
+The runner accepts `--executable`, then checks `LTSPICE_EXE`, `PATH` and standard Windows installation locations. It returns a failure for a timeout, a non-zero simulator exit, missing/unchanged/empty logs, simulator errors or failed measurements.
+
+Run against a scratch copy when retaining the original logs:
+
+```powershell
+Copy-Item -Recurse VW-MTC1\Simulation\LTspice build\ltspice-run
+.\.venv\Scripts\python.exe -m vw_mtc1.runlt build\ltspice-run\sim00_mosfet_model_check.cir 300
+```
+
+The source package omits raw waveform files. Regenerate the required `.cir` files before running `an_sim01` through `an_sim06_07`. Set `VW_MTC1_SIMULATION_DIR` to the scratch simulation directory containing `LTspice/`, `results.json` and, when generated, `Plots/`:
+
+```powershell
+$env:VW_MTC1_SIMULATION_DIR = (Resolve-Path build\vw-mtc1).Path
+.\.venv\Scripts\python.exe -m vw_mtc1.an_sim01
+```
+
+The scripts execute sequentially when updating the same `results.json`; concurrent writers are not supported. Analysis modules should be run with `python -m vw_mtc1.<module>` after installation. A wheel installed outside this checkout also needs `VW_MTC1_SIMULATION_DIR` for data-dependent commands.
+
+The five formerly timed-out cases completed with an 1800-second limit. Charger and
+touch-gap investigations, diagnostic netlists and remaining acceptance failures are
+documented in the [Rev01 verification record](docs/20261020-VW-MTC1-Verification-Rev01.md).
+To reproduce the additional diagnostic sweeps:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/investigate_analogue.py --output build\analogue-investigation --timeout 600
+```
+
+Simulation completion does not imply that every measurement or design target
+passes. The runner also rejects failed rows in stepped measurement tables.
+
+## Android build and tests
+
+Use JDK 17, Android SDK platform 34 and build-tools 34.0.0. Set `JAVA_HOME` and `ANDROID_HOME` to those installations, or configure the SDK in Android Studio. The committed Gradle 8.2.1 wrapper verifies its distribution checksum.
+
+```powershell
+.\gradlew.bat assembleDebug testDebugUnitTest lintDebug
+```
+
+On Linux/macOS, use `./gradlew` with the same tasks. The debug APK is written to `app/build/outputs/apk/debug/`. JVM tests mock Android sensors and Room boundaries; they do not require a phone or emulator. Device instrumentation and physical sensor validation remain separate checks.
+
+The app preserves raw phone proximity readings in their own sensor type. They are not calibrated along-maze distance. External board samples need an explicit transport and calibration contract before they can drive distance/offset fusion.
+
+## Automated verification
+
+The PR workflow builds and tests the Python tools on Windows and Linux, checks the pin-map header on Linux, and builds/tests/lints Android on Linux. It does not flash hardware, run physical measurements or regenerate fabrication exports.
+
+The original thesis and previously delivered package ZIP remain local and are excluded from Git. The original Rev00 package files under `VW-MTC1/` remain available alongside the maintained source tools.

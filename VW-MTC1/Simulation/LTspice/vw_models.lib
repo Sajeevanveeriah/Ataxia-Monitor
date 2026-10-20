@@ -1,0 +1,21 @@
+* vw_models.lib - discrete device models written for the VW-MTC1 simulations
+* These are APPROXIMATE behavioural fits to datasheet headline values, not
+* manufacturer models. Verified by sim00_mosfet_model_check.cir.
+*
+* AO3401A  P-channel 30 V SOT-23 (Q1 power path)
+*   Targets: VTO = -0.9 V; RDS(on) ~50 mohm at VGS = -4.5 V, ~70 mohm at
+*   VGS = -2.5 V; Ciss ~650 pF. Fit: linear-region RDS = Rd + 1/(Kp*Vov)
+*   with Vov = |VGS| - 0.9: Kp = 17.4 A/V^2, Rd = 34 mohm gives 50.0 / 70.0
+*   mohm. Capacitances: Cgs 560 p + Cgd (150 p -> 40 p) ~ 650-700 pF Ciss at
+*   low VDS. Body diode Is 1e-12, N 1.05, BV 30 V.
+.model AO3401A VDMOS(pchan Vto=-0.9 Kp=17.4 Rd=34m Rs=0 Rg=3 lambda=0.01
++ Cgs=560p Cgdmax=150p Cgdmin=40p a=0.5 Cjo=120p m=0.4 Is=1e-12 N=1.05 Rb=20m
++ BV=30 Ibv=10u mfg=approx_fit)
+*
+* AO3400A  N-channel 30 V SOT-23 (Q2 haptic driver, Q3 buzzer driver)
+*   Targets: VTO = 1.0 V; RDS(on) ~30 mohm at 4.5 V, ~45 mohm at 2.5 V;
+*   Ciss ~650 pF. Fit: Kp = 25.4 A/V^2, Rd = 18.75 mohm (30.0 / 45.0 mohm).
+*   Body diode / avalanche BV 30 V.
+.model AO3400A VDMOS(Vto=1.0 Kp=25.4 Rd=18.75m Rs=0 Rg=3 lambda=0.01
++ Cgs=580p Cgdmax=120p Cgdmin=30p a=0.5 Cjo=100p m=0.4 Is=1e-12 N=1.05 Rb=20m
++ BV=30 Ibv=10u mfg=approx_fit)

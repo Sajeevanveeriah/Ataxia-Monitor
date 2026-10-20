@@ -1,0 +1,31 @@
+LTspice 26.1.1 for Windows
+Circuit: C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim01a_buckboost_startup.cir
+Start Time: Mon Oct 19 10:01:35 2026
+Options:plotwinsize=0
+solver = Normal
+Maximum thread count: 32
+tnom = 27
+temp = 27
+method = trap
+xbb:C28: Increased Cpar to 1e-11
+xbb:C30: Increased Cpar to 1e-11
+xbb:C31: Increased Cpar to 1e-11
+Direct Newton iteration failed to find operating point.
+Starting Gmin stepping
+Gmin stepping succeeded in finding the operating point.
+
+Total elapsed time: 62.972 seconds.
+Total iterations: 3580052
+
+Files loaded:
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim01a_buckboost_startup.cir
+C:\Users\sajee\AppData\Local\LTspice\lib\sub\LTC3536.sub
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\vw_3v3_buckboost.inc
+
+vfinal: AVG(V(ofilt))=3.31492269339 FROM 0.0025 TO 0.003
+vmaxf: MAX(V(ofilt))=3.32739067078 FROM 0 TO 0.003
+vmaxraw: MAX(V(out))=3.77913212776 FROM 0 TO 0.003
+t10: V(ofilt)=0.3315 AT 0.000125624958045
+t90: V(ofilt)=2.9835 AT 0.00083161370889
+tsettle: V(ofilt)=3.282 AT 0.000909954720345
+iinpk: MAX(I(Rsrc))=1.91881382465 FROM 0 TO 0.003

@@ -1,0 +1,27 @@
+* SIM01d - VW-MTC1 3.3 V buck-boost rail (U4 = LTC3536EMSE) - Burst Mode
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : light-load operation, MODE/SYNC pulled to VIN through 100 k
+*           (R34) -> Burst Mode. VIN = 3.7 V, load 20 mA (ESP32 light sleep
+*           / idle with OLED). Report ripple p-p and efficiency.
+* Pin/Pout as SIM01c, averaged over 4 ms - 8 ms (several burst cycles).
+.lib LTC3536.sub
+.include vw_3v3_buckboost.inc
+
+.param VIN=3.7 ILOAD=0.02
+Vbat   vsrc 0 {VIN}
+Rsrc   vsrc vin 50m
+R34    vin mode 100k
+XBB    vin out mode ofilt vw_3v3_bb
+Iload  out 0 {ILOAD}
+
+.options plotwinsize=0
+.save V(out) V(ofilt) V(vin) I(Rsrc) V(mode)
+.tran 0 8m 0 startup
+.meas TRAN pin  AVG V(vin)*I(Rsrc) FROM 4m TO 8m
+.meas TRAN pout AVG V(out)*{ILOAD} FROM 4m TO 8m
+.meas TRAN eff PARAM pout/pin
+.meas TRAN vavg AVG V(ofilt) FROM 4m TO 8m
+.meas TRAN rpp_f PP V(ofilt) FROM 4m TO 8m
+.meas TRAN rpp_raw PP V(out) FROM 4m TO 8m
+.end

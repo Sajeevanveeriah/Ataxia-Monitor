@@ -1,0 +1,55 @@
+LTspice 26.1.1 for Windows
+Circuit: C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim03e_q1_gate_study.cir
+Start Time: Mon Oct 19 10:39:50 2026
+
+.step r43=1000
+solver = Normal
+Maximum thread count: 32
+tnom = 27
+temp = 27
+method = trap
+Direct Newton iteration succeeded in finding operating point.
+
+.step r43=2200
+Direct Newton iteration succeeded in finding operating point.
+
+.step r43=10000
+Direct Newton iteration succeeded in finding operating point.
+
+.step r43=100000
+Direct Newton iteration succeeded in finding operating point.
+Total elapsed time: 1.136 seconds.
+Total iterations: 80217
+
+Files loaded:
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim03e_q1_gate_study.cir
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\vw_models.lib
+
+
+Measurement: t_on
+  step	V(vbat)-V(vsys)=0.1
+     1	0.00417696661082
+     2	0.00646337462181
+     3	0.0209237128238
+     4	failed
+
+Measurement: t_full
+  step	V(vbat)-V(vsys)=0.04
+     1	0.00560170342384
+     2	0.00963605816438
+     3	0.0363926852538
+     4	failed
+
+Measurement: vsys_min
+  step	MIN(V(vsys))	FROM	TO
+     1	2.95227169991	0.002	0.4
+     2	2.95227169991	0.002	0.4
+     3	2.95227169991	0.002	0.4
+     4	2.95227169991	0.002	0.4
+
+Measurement: i_usb_r43
+  step	5/R43
+     1	0.005
+     2	0.00227272727273
+     3	0.0005
+     4	5e-05

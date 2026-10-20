@@ -1,0 +1,22 @@
+LTspice 26.1.1 for Windows
+Circuit: C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim07_buzzer.cir
+Start Time: Mon Oct 19 10:23:57 2026
+solver = Normal
+Maximum thread count: 32
+tnom = 27
+temp = 27
+method = trap
+C80: Increased Cpar to 1e-11
+Direct Newton iteration succeeded in finding operating point.
+Total elapsed time: 42.135 seconds.
+Total iterations: 20013626
+
+Files loaded:
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim07_buzzer.cir
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\vw_models.lib
+
+vdpk: MAX(V(drain))=4.23116588593 FROM 0.015 TO 0.02
+v33_pp: PP(V(v33))=0.00904822349548 FROM 0.015 TO 0.02
+ibz_pk: MAX(I(RBZ))=0.178509861231 FROM 0.015 TO 0.02
+ibz_avg: AVG(I(RBZ))=0.0840426701454 FROM 0.015 TO 0.02
+id80_pk: MAX(I(D80))=0.177952036262 FROM 0.015 TO 0.02

@@ -4,7 +4,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import com.clinic.ataxia.domain.model.SensorSample
 import com.clinic.ataxia.domain.model.SensorType
 import kotlinx.coroutines.channels.awaitClose
@@ -29,20 +28,12 @@ class SensorCollector(
      */
     fun sensorSamples(): Flow<SensorSample> = callbackFlow {
         val listeners = mutableListOf<SensorEventListener>()
-        val requestedTypes = mutableListOf(
+        val requestedTypes = listOf(
             Sensor.TYPE_GYROSCOPE,
             Sensor.TYPE_ACCELEROMETER,
-            Sensor.TYPE_ROTATION_VECTOR
+            Sensor.TYPE_ROTATION_VECTOR,
+            Sensor.TYPE_PROXIMITY
         )
-
-        // The current domain model expects a two-value distance/offset source.
-        // Older devices follow the proximity fallback path. Keep this adapter in
-        // sync with the actual physical sensor integration used by the project.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requestedTypes += Sensor.TYPE_TIME_OF_FLIGHT
-        } else {
-            requestedTypes += Sensor.TYPE_PROXIMITY
-        }
 
         requestedTypes.distinct().forEach { type ->
             val sensor = sensorManager.getDefaultSensor(type) ?: return@forEach
@@ -82,10 +73,9 @@ class SensorCollector(
         Sensor.TYPE_GYROSCOPE -> SensorType.GYROSCOPE
         Sensor.TYPE_ACCELEROMETER -> SensorType.ACCELEROMETER
         Sensor.TYPE_ROTATION_VECTOR -> SensorType.ROTATION_VECTOR
-        // Proximity is deliberately normalised into the distance-domain type so
-        // downstream code has one adapter contract rather than Android API branches.
-        Sensor.TYPE_TIME_OF_FLIGHT -> SensorType.TIME_OF_FLIGHT
-        Sensor.TYPE_PROXIMITY -> SensorType.TIME_OF_FLIGHT
+        // Phone proximity is in centimetres (sometimes only near/far), not
+        // calibrated distance along the maze. Retain it without changing fusion.
+        Sensor.TYPE_PROXIMITY -> SensorType.PROXIMITY
         else -> SensorType.UNKNOWN
     }
 }

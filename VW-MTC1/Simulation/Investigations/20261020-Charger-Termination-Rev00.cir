@@ -1,0 +1,21 @@
+* Diagnostic only: LTC4054 termination with a slow, externally driven battery.
+* Removes battery-capacitance scaling and USB cable transients.
+* RPROG 2k and 10k are the datasheet termination-ratio test conditions.
+* Current entering Vcell is positive charge current. No model internals changed.
+.lib LTC4054-4.2.sub
+.param RP=2490 TMAX=100u
+.step param RP list 2000 2490 10000
+.step param TMAX list 10u 100u 1m
+Vcc vcc 0 PWL(0 0 20u 5)
+* Approach float voltage, then sweep only 3.5mV over 10s so the fixed
+* termination-comparator delay is small relative to the CV taper.
+Vcell cell 0 PWL(0 3.7 100m 3.7 1 4.216 11 4.2195 12 4.2195)
+Vsense bat cell 0
+Xcharger chrg 0 bat vcc prog LTC4054-4.2
+Rprog prog 0 {RP}
+Rstatus vcc chrg 10k
+Cinput vcc 0 1u
+.save V(bat) V(prog) V(chrg) I(Vsense) I(Rprog)
+.options plotwinsize=0 numdgt=15
+.tran 0 12 0 {TMAX} uic
+.end

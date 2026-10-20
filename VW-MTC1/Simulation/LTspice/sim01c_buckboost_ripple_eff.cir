@@ -1,0 +1,29 @@
+* SIM01c - VW-MTC1 3.3 V buck-boost rail (U4 = LTC3536EMSE) - ripple and
+*          efficiency in PWM mode
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : steady-state output ripple (p-p) and efficiency Pout/Pin at
+*           VIN = 3.7 V for 50, 300 and 600 mA loads, MODE = 0 (PWM).
+* Pin     : V(vin) * I(Rsrc), i.e. power entering the board VSYS node
+*           (CIN included, source resistance excluded).
+* Pout    : V(out) * ILOAD averaged over the same window (2.5 ms - 3.0 ms).
+.lib LTC3536.sub
+.include vw_3v3_buckboost.inc
+
+.param VIN=3.7 ILOAD=0.3
+.step param ILOAD list 0.05 0.3 0.6
+Vbat   vsrc 0 {VIN}
+Rsrc   vsrc vin 50m
+XBB    vin out 0 ofilt vw_3v3_bb
+Iload  out 0 {ILOAD}
+
+.options plotwinsize=0
+.save V(out) V(ofilt) V(vin) I(Rsrc)
+.tran 0 3m 0 startup
+.meas TRAN pin  AVG V(vin)*I(Rsrc) FROM 2.5m TO 3m
+.meas TRAN pout AVG V(out)*{ILOAD} FROM 2.5m TO 3m
+.meas TRAN eff PARAM pout/pin
+.meas TRAN vavg AVG V(ofilt) FROM 2.5m TO 3m
+.meas TRAN rpp_f PP V(ofilt) FROM 2.5m TO 3m
+.meas TRAN rpp_raw PP V(out) FROM 2.5m TO 3m
+.end

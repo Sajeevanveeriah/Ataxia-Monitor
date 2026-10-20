@@ -1,0 +1,50 @@
+* SIM02a - VW-MTC1 Li-ion charger U3 = LTC4054ES5-4.2 - full charge cycle
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : show trickle -> constant current -> constant voltage ->
+*           C/10 termination with RPROG = 2.49 k (expected ICHG = 402 mA).
+* Supply  : USB 5 V through a cable model (1 uH, 100 mohm), ramped 0-5 V in
+*           20 us. C20 10 uF ceramic with R20 1.5 ohm in SERIES with the
+*           capacitor (LTC4054 datasheet hot-plug damping recommendation;
+*           the 1.5 ohm is not in the supply path). C21 1 uF at the VCC pin.
+* BAT pin : C22 4.7 uF in series with 1 ohm (R22).
+* Battery : SCALED model, as in the ADI LTC4054 example: a 1.5 F capacitor
+*           (Ccell) behind Rint = 0.25 ohm (typical small Li-ion cell
+*           internal resistance, gives a visible CV taper). 1.5 F charges
+*           0.27 V/s at 400 mA, so the whole cycle takes seconds instead of
+*           hours. Start at 2.85 V (.ic) so the trickle phase (< 2.9 V) is
+*           visible. Currents and thresholds are not affected by the scaling;
+*           only the time axis is compressed.
+* CHRG    : open-drain, +3.3 V -> R23 1 k -> D20 red LED (QTLP690C model)
+*           -> CHRG pin.
+* Pin order: _CHRG GND BAT Vcc Prog
+.lib LTC4054-4.2.sub
+
+Vusb   usb 0 PWL(0 0 20u 5)
+Rcab   usb usb1 100m
+Lcab   usb1 vcc 1u
+C20    vcc c20n 10u Rser=3m
+R20    c20n 0 1.5
+C21    vcc 0 1u Rser=5m
+XU3    chrg 0 bat vcc prog LTC4054-4.2
+R21    prog 0 2.49k
+C22    bat c22n 4.7u
+R22    c22n 0 1
+Rint   bat cell 0.25
+Ccell  cell 0 1.5
+V3v3   p3v3 0 3.3
+R23    p3v3 leda 1k
+D20    leda chrg QTLP690C
+.model QTLP690C D(Is=1e-22 Rs=6 N=1.5 Cjo=50p Xti=100 Iave=160m Vpk=5 mfg=Fairchild type=LED)
+* Initial conditions: cell and BAT pin both at 2.85 V (avoids a false
+* inrush from the cell into C22 at t = 0 with uic).
+.ic V(cell)=2.85 V(bat)=2.85 V(c22n)=0
+
+.save V(bat) V(cell) I(Rint) V(chrg) I(D20) V(vcc) I(Rcab) V(prog)
+.tran 0 9 0 2m uic
+.meas TRAN i_trickle AVG I(Rint) FROM 0.2 TO 0.3
+.meas TRAN i_cc AVG I(Rint) FROM 3 TO 3.5
+.meas TRAN v_cv MAX V(bat) FROM 0 TO 9
+.meas TRAN v_bat_end AVG V(bat) FROM 8.5 TO 9
+.meas TRAN i_end AVG I(Rint) FROM 8.5 TO 9
+.end

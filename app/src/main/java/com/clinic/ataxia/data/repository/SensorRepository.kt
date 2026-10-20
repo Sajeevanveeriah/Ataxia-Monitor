@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +22,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Owns the recording-session lifecycle and is the boundary between sensor I/O,
@@ -41,6 +44,7 @@ class SensorRepository(
     private val _activeSessionId = MutableStateFlow<Long?>(null)
     private val _liveMetrics = MutableStateFlow<TraversalMetrics?>(null)
     private var collectionJob: Job? = null
+    private val lifecycleMutex = Mutex()
 
     val liveMetrics: StateFlow<TraversalMetrics?> = _liveMetrics.asStateFlow()
     val activeSessionId: StateFlow<Long?> = _activeSessionId.asStateFlow()
@@ -59,10 +63,10 @@ class SensorRepository(
             .map { it?.toDomain() }
 
     /** Starts a recording if another session is not already active. */
-    suspend fun startSession(patientId: String, notes: String?) {
+    suspend fun startSession(patientId: String, notes: String?) = lifecycleMutex.withLock {
         // Treat repeated start taps as idempotent rather than creating overlapping
         // database sessions that would compete for the same sensor stream.
-        if (_activeSessionId.value != null) return
+        if (_activeSessionId.value != null) return@withLock
 
         // Fusion state is session-scoped even though the engine instance is
         // application-scoped, so reset before accepting new samples.
@@ -82,17 +86,17 @@ class SensorRepository(
     }
 
     /** Stops sensor collection and closes the current persisted session. */
-    suspend fun stopSession() {
-        val sessionId = _activeSessionId.value ?: return
+    suspend fun stopSession() = lifecycleMutex.withLock {
+        val sessionId = _activeSessionId.value ?: return@withLock
 
-        // Publish inactive state before cancelling/persisting so the UI cannot
-        // start a second stop operation against the same session ID.
-        _activeSessionId.value = null
-        collectionJob?.cancel()
+        // Wait for in-flight persistence and hardware cleanup. Keep the ID until
+        // closing succeeds, so a database failure can be retried.
+        collectionJob?.cancelAndJoin()
         collectionJob = null
         withContext(ioDispatcher) {
             database.sessionDao().closeSession(sessionId, System.currentTimeMillis())
         }
+        _activeSessionId.value = null
         _liveMetrics.value = null
     }
 

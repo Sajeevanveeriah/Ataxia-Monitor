@@ -1,0 +1,17 @@
+# Preserve exported CAD and simulator evidence byte-for-byte.
+* whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.step binary
+*.log binary
+*.asc -text
+*.net -text
+*.kicad_pcb -text
+*.kicad_sch -text
+*.kicad_sym -text
+*.kicad_pro -text
+*.kicad_dru -text
+*.csv -text
+
+*.py text eol=lf
+*.sh text eol=lf
+gradlew text eol=lf
+*.bat text eol=crlf

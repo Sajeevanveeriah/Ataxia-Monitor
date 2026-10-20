@@ -1,0 +1,120 @@
+{
+  "baseline_revision": "159437959a1098b34ed8b984870f4752db29c3c9",
+  "simulator": "LTspice 26.1.1 for Windows",
+  "rerun_timeout_seconds": 1800,
+  "maximum_parallel_reruns": 2,
+  "reruns": [
+    {
+      "circuit": "sim01b_buckboost_loadstep.cir",
+      "timeout_seconds": 1800,
+      "exit_code": 0,
+      "seconds": 150.89,
+      "netlist_sha256": "da2fde9f1c4c82bc7e29de9d97bf30b490c554b624588a876ff42dd480cecc8d",
+      "raw_bytes": 171810112,
+      "normalised_lf_sha256": "da2fde9f1c4c82bc7e29de9d97bf30b490c554b624588a876ff42dd480cecc8d"
+    },
+    {
+      "circuit": "sim01c_buckboost_ripple_eff.cir",
+      "timeout_seconds": 1800,
+      "exit_code": 0,
+      "seconds": 170.55,
+      "netlist_sha256": "83217f6d6dc3436dfcd99957d4a02c36275d741e65828e462d3e9e1b6a65fd4c",
+      "raw_bytes": 185637162,
+      "normalised_lf_sha256": "83217f6d6dc3436dfcd99957d4a02c36275d741e65828e462d3e9e1b6a65fd4c"
+    },
+    {
+      "circuit": "sim03a_powerpath_unplug_proposed.cir",
+      "timeout_seconds": 1800,
+      "exit_code": 0,
+      "seconds": 470.78,
+      "netlist_sha256": "373185012bc6b477930f4e26fa4adecadcb80050b3efe671c212e4be89551268",
+      "raw_bytes": 854605986,
+      "normalised_lf_sha256": "0ec9623a69bc4a47a9e474673039a2a052996732156b0104e192d6321d4098dc"
+    },
+    {
+      "circuit": "sim03b_powerpath_unplug_revised.cir",
+      "timeout_seconds": 1800,
+      "exit_code": 0,
+      "seconds": 451.3,
+      "netlist_sha256": "73795d9320a36332835bff9a6d285e7ef0e7643d2bdeda8336650d03c24f04bc",
+      "raw_bytes": 932101252,
+      "normalised_lf_sha256": "9bd8c91900f404b08ab9568d1c2e673dc716ab1187a6cca1919b018c618e3f49"
+    },
+    {
+      "circuit": "sim03d_powerpath_unplug_final.cir",
+      "timeout_seconds": 1800,
+      "exit_code": 0,
+      "seconds": 351.84,
+      "netlist_sha256": "01766148d16a47ab741e24685e5145c890899f146b514119c6090ed3985e01ca",
+      "raw_bytes": 802650032,
+      "normalised_lf_sha256": "1c7301c7cfedbd0f9c50800963db70b6b2ac0ae57d7257fd6f69e632ba450a8f"
+    }
+  ],
+  "other_circuits": "15 previously completed waveform sets reused from the preceding verified run",
+  "analysis_runs": [
+    {
+      "module": "an_sim01",
+      "exit_code": 0,
+      "seconds": 3.16
+    },
+    {
+      "module": "an_sim02",
+      "exit_code": 0,
+      "seconds": 0.95
+    },
+    {
+      "module": "an_sim03",
+      "exit_code": 0,
+      "seconds": 15.36
+    },
+    {
+      "module": "an_sim04",
+      "exit_code": 0,
+      "seconds": 2.26
+    },
+    {
+      "module": "an_sim05",
+      "exit_code": 0,
+      "seconds": 0.85
+    },
+    {
+      "module": "an_sim06_07",
+      "exit_code": 0,
+      "seconds": 2.29
+    },
+    {
+      "module": "make_summary",
+      "exit_code": 0,
+      "seconds": 0.61
+    }
+  ],
+  "regenerated_results_equal_archive": true,
+  "assessment_status_counts": {
+    "PASS": 66,
+    "INFO": 93,
+    "FAIL": 17
+  },
+  "stepped_measurement_regression": {
+    "circuit": "sim03e_q1_gate_study.cir",
+    "failed_measurements": [
+      "t_on step 4",
+      "t_full step 4"
+    ],
+    "runner_exit_code_after_fix": 1,
+    "interpretation": "R43=100k negative-control case never reaches either turn-on threshold within its simulated interval"
+  },
+  "unit_tests": {
+    "python_passed": 95,
+    "android_previous_verified": 18
+  },
+  "rc_calculation": {
+    "supply_V": 3.3,
+    "pullup_ohm": 360000,
+    "series_ohm_including_switch": 10001,
+    "capacitance_F": 2.7e-08,
+    "rising_threshold_V": 1.7,
+    "tau_ms": 9.72,
+    "initial_voltage_V": 0.0891978670327918,
+    "calculated_release_ms": 6.770146817940272
+  }
+}

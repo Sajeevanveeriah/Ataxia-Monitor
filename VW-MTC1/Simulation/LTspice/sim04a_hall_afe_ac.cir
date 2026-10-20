@@ -1,0 +1,21 @@
+* SIM04a - VW-MTC1 Hall front end (U6 MCP6004 Sallen-Key LPF) - AC response
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : -3 dB frequency, Q / peaking, gain at 50 Hz, 1 kHz (Nyquist at
+*           2 kS/s per channel) and 1.2 MHz (buck-boost switching), group
+*           delay at 10 Hz (limit < 2 ms).
+* Source  : SS49E output modelled as 1.65 V DC (null at 3.3 V) + 1 V AC,
+*           100 ohm output impedance.
+* Circuit : vw_hall_afe.inc (R50-R52, C51, C52, U6 UniversalOpAmp2 level2).
+.include vw_hall_afe.inc
+Vdd   vdd 0 3.3
+Vs    hs 0 DC 1.65 AC 1
+Rsens hs hall 100
+XF    hall adc vdd hall_lpf
+.ac dec 200 1 10Meg
+.meas AC g50  FIND mag(V(adc)) AT 50
+.meas AC g1k  FIND mag(V(adc)) AT 1k
+.meas AC g1m2 FIND mag(V(adc)) AT 1.2Meg
+.meas AC gpk  MAX mag(V(adc))
+.meas AC f3db WHEN mag(V(adc))=0.70711 FALL=1
+.end

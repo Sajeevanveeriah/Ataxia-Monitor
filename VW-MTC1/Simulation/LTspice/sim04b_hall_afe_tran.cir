@@ -1,0 +1,38 @@
+* SIM04b - VW-MTC1 Hall front end - transient, old design vs new filter
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : noise rms and peak-timing error at the ADC input for
+*   (i)  old thesis design: SS49E straight to the ADC pin (no filter)
+*   (ii) new design: 1 M pull-down + Sallen-Key LPF (vw_hall_afe.inc)
+* Signal  : ten magnet passes, Gaussian bump +0.8 V over the 1.65 V null,
+*           sigma = 12 ms (handle at 20 cm/s over a 10 cm magnet pitch),
+*           centred every 103.7 ms from 50 ms (spacing chosen so the 50 Hz
+*           phase differs at each pass; a 100 ms spacing would lock it).
+* Interference added to the noisy copy:
+*   - broadband noise KN*white(1e5*time): smooth random, new value every
+*     10 us (energy up to ~50 kHz). KN = 0.0806 gives 20 mV rms (calibrated: KN = 0.069 measured 17.13 mV rms)
+*     (checked from V(nz) in post-processing).
+*   - 50 Hz mains pickup, 10 mV amplitude.
+*   The 1.2 MHz switching ripple is simulated separately in SIM04c (it
+*   needs a 20 ns time step) and combined in post-processing by rms.
+* A noise-free copy drives an identical filter so noise = noisy - clean,
+*   and the true peak time is known exactly.
+* Sensor output impedance: 100 ohm (Rsens).
+* Note: squares are written as x*x; LTspice x**y returns an invalid value
+* for negative x, which corrupted the first attempt.
+.include vw_hall_afe.inc
+.param KN=0.0806 SIG=12m
+Vdd   vdd 0 3.3
+Bclean sc 0 V=1.65+0.8*(exp(-(time-50.0m)*(time-50.0m)/(2*SIG*SIG))+exp(-(time-153.7m)*(time-153.7m)/(2*SIG*SIG))+exp(-(time-257.4m)*(time-257.4m)/(2*SIG*SIG))+exp(-(time-361.1m)*(time-361.1m)/(2*SIG*SIG))+exp(-(time-464.8m)*(time-464.8m)/(2*SIG*SIG))+exp(-(time-568.5m)*(time-568.5m)/(2*SIG*SIG))+exp(-(time-672.2m)*(time-672.2m)/(2*SIG*SIG))+exp(-(time-775.9m)*(time-775.9m)/(2*SIG*SIG))+exp(-(time-879.6m)*(time-879.6m)/(2*SIG*SIG))+exp(-(time-983.3m)*(time-983.3m)/(2*SIG*SIG)))
+Bnz   nz 0 V=KN*white(1e5*time)+10m*sin(2*pi*50*time)
+Bnoisy sn 0 V=V(sc)+V(nz)
+* old design: sensor straight to ADC (ADC input is high impedance)
+Rs_old sn adc_old 100
+* new design, noisy and clean copies
+Rs_new sn hall_new 100
+XFN   hall_new adc_new vdd hall_lpf
+Rs_cl sc hall_cl 100
+XFC   hall_cl adc_cl vdd hall_lpf
+.save V(sc) V(nz) V(adc_old) V(adc_new) V(adc_cl)
+.tran 0 1040m 0 2u
+.end

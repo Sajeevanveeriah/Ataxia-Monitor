@@ -1,0 +1,25 @@
+LTspice 26.1.1 for Windows
+Circuit: C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim00_mosfet_model_check.cir
+Start Time: Mon Oct 19 10:04:55 2026
+solver = Normal
+Maximum thread count: 32
+tnom = 27
+temp = 27
+method = trap
+Direct Newton iteration failed to find operating point.
+Starting Gmin stepping
+Gmin stepping succeeded in finding the operating point.
+
+Total elapsed time: 0.096 seconds.
+Total iterations: 395
+
+Files loaded:
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\sim00_mosfet_model_check.cir
+C:\Dev\Projects\Ataxia-Device\VW-MTC1\Simulation\LTspice\vw_models.lib
+
+rdsp_45: V(dp45)/0.5=0.0499453097582
+rdsp_25: V(dp25)/0.5=0.0697138309479
+rdsn_45: V(dn45)/0.5=0.0300070121884
+rdsn_25: V(dn25)/0.5=0.0451090604328
+vthp: V(gpt)=-0.90533643961
+vthn: V(gnt)=1.00441467762

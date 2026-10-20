@@ -1,0 +1,28 @@
+* Diagnostic only: original charger topology, two cell scales and time steps.
+* Adds a zero-volt sense source to distinguish IC BAT current from cell current.
+.lib LTC4054-4.2.sub
+.param SCALE=1 TMAX=2m
+.step param SCALE list 1 10
+.step param TMAX list 200u 2m
+Vusb usb 0 PWL(0 0 20u 5)
+Rcab usb usb1 100m
+Lcab usb1 vcc 1u
+C20 vcc c20n 10u Rser=3m
+R20 c20n 0 1.5
+C21 vcc 0 1u Rser=5m
+Xcharger chrg 0 charger_bat vcc prog LTC4054-4.2
+Vsense charger_bat bat 0
+Rprog prog 0 2.49k
+C22 bat c22n 4.7u
+R22 c22n 0 1
+Rint bat cell 0.25
+Ccell cell 0 {1.5*SCALE}
+V3v3 p3v3 0 3.3
+R23 p3v3 leda 1k
+D20 leda chrg QTLP690C
+.model QTLP690C D(Is=1e-22 Rs=6 N=1.5 Cjo=50p Xti=100 Iave=160m Vpk=5)
+.ic V(cell)=2.85 V(bat)=2.85 V(c22n)=0
+.save V(bat) V(cell) V(prog) V(chrg) I(Vsense) I(Rint)
+.options plotwinsize=0 numdgt=15
+.tran 0 {9*SCALE} 0 {TMAX} uic
+.end

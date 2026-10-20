@@ -1,0 +1,31 @@
+* SIM01b - VW-MTC1 3.3 V buck-boost rail (U4 = LTC3536EMSE) - load step
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : ESP32-S3 Wi-Fi TX burst. Load 50 mA -> 600 mA at t = 2.0 ms,
+*           600 mA -> 50 mA at t = 2.6 ms, 1 us edges, PWM mode (MODE = 0).
+*           Stepped over VIN = 3.0 V (boost region), 3.7 V (buck-boost /
+*           near VOUT) and 4.6 V (buck region, USB powered via Schottky).
+* Limits  : V(ofilt) within 3.13 V to 3.48 V (+/- 5 %); check ringing
+*           (more than 3 visible cycles = inadequate phase margin).
+* Load    : ideal current source (ESP32 draws roughly constant current).
+* Circuit : vw_3v3_buckboost.inc with compensation params CC/RC/CFF/RFF.
+.lib LTC3536.sub
+.include vw_3v3_buckboost.inc
+
+.param VIN=3.7
+.param CC=220p RC=49.9k CFF=47p RFF=6.49k
+.step param VIN list 3.0 3.7 4.6
+Vbat   vsrc 0 {VIN}
+Rsrc   vsrc vin 50m
+XBB    vin out 0 ofilt vw_3v3_bb CC={CC} RC={RC} CFF={CFF} RFF={RFF}
+Iload  out 0 PWL(0 50m 2.0m 50m 2.001m 600m 2.6m 600m 2.601m 50m)
+
+.options plotwinsize=0
+.save V(out) V(ofilt) V(vin) I(Iload)
+.tran 0 3.2m 0 startup
+.meas TRAN vpre  AVG V(ofilt) FROM 1.8m TO 2.0m
+.meas TRAN vmin_up MIN V(ofilt) FROM 2.0m TO 2.6m
+.meas TRAN vhi   AVG V(ofilt) FROM 2.4m TO 2.6m
+.meas TRAN vmax_dn MAX V(ofilt) FROM 2.6m TO 3.2m
+.meas TRAN vpost AVG V(ofilt) FROM 3.0m TO 3.2m
+.end

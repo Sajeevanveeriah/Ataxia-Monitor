@@ -1,0 +1,68 @@
+* SIM03d - VW-MTC1 power path, USB unplug / replug - FINAL revised circuit
+* Changes from SIM03a (proposed), each found by simulation:
+*   1. R43 (Q1 gate / VBUS pull-down) 100 k -> 2.2 k. With 100 k, VBUS
+*      (C40 10 uF) decays with tau ~0.67 s and the 1N5819 reverse leakage
+*      from VSYS holds VBUS near 2 V, so Q1 never fully turned on and VSYS
+*      ran on the body diode at 2.95 V (SIM03a, SIM03e). 2.2 k gives Q1
+*      turn-on ~4.5 ms after unplug (SIM03e) at a cost of 2.3 mA from USB.
+*      (SIM03b tried a BAT54 gate feed instead; it does not help because
+*      the gate still follows the slowly decaying VBUS.)
+*   2. C42 100 uF low-ESR bulk (polymer/tantalum, ESR 50 mohm assumed) on
+*      VSYS: SIM03c showed the USB replug line step overshoots +3V3 by
+*      +6.4 % with C41 alone; with C42 it is +3.3 %.
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : USB 5 V is removed at t = 5 ms and reconnected at t = 15 ms
+*           while the 3.3 V rail (U4 LTC3536, vw_3v3_buckboost.inc, PWM)
+*           supplies 300 mA. Check VSYS minimum, +3V3 deviation (+/- 5 %),
+*           Q1 turn-on delay and reverse current into VBUS when unplugged.
+* Path    : USB source -> cable (100 mohm, 1 uH) -> S_USB (connector, models
+*           plug/unplug; Roff = 100 Meg = open) -> VBUS
+*           VBUS: C40 10 uF, sense divider R41/R42 100 k / 100 k
+*           D40 1N5819 Schottky (standard.dio, OnSemi; 1 A rating chosen over
+*               MBR0520L 0.5 A because VSYS draws up to ~0.5 A at 600 mA
+*               3.3 V load; SOD-123 equivalent B5819W) VBUS -> VSYS
+*           Q1 AO3401A P-MOSFET (vw_models.lib fit): drain = VBAT,
+*               source = VSYS, gate = VBUS, R43 2.2 k gate to GND.
+*               Body diode conducts VBAT -> VSYS when Q1 is off.
+*           VSYS: C41 22 uF ceramic (10 uF effective, DC-bias assumption)
+* Battery : 3.7 V ideal + 50 mohm.
+* Not modelled: LTC4054 charger load on VBUS (it is fed from VBUS directly
+*           and would only speed up the VBUS decay after unplug).
+.lib LTC3536.sub
+.include vw_3v3_buckboost.inc
+.include vw_models.lib
+.model 1N5819 D(Is=31.7u Rs=.051 N=1.373 Cjo=110p M=.35 Eg=.69 Xti=2 Iave=1 Vpk=40 mfg=OnSemi type=Schottky)
+.model SWUSB SW(Ron=10m Roff=100Meg Vt=0.5 Vh=0)
+
+Vusb   usb 0 5
+Rcab   usb a1 100m
+Lcab   a1 a2 1u Rpar=50
+S_USB  a2 vbus plug 0 SWUSB
+Vplug  plug 0 PWL(0 1 5m 1 5.0001m 0 15m 0 15.0001m 1)
+C40    vbus 0 10u Rser=3m
+R41    vbus vsense 100k
+R42    vsense 0 100k
+D40    vbus vsys 1N5819
+MQ1    vbat vbus vsys vsys AO3401A
+R43    vbus 0 2.2k
+C41    vsys 0 10u Rser=3m
+C42    vsys 0 100u Rser=50m
+Vcell  cell 0 3.7
+Rcell  cell vbat 50m
+XBB    vsys out 0 ofilt vw_3v3_bb
+Iload  out 0 300m
+
+.save V(vbus) V(vsys) V(vbat) V(out) V(ofilt) I(D40) Id(MQ1) I(Rcell) V(plug)
+.tran 0 20m 0 startup
+.meas TRAN vsys_usb AVG V(vsys) FROM 4.5m TO 5m
+.meas TRAN vsys_min MIN V(vsys) FROM 5m TO 15m
+.meas TRAN vsys_bat AVG V(vsys) FROM 14m TO 15m
+.meas TRAN v3_min MIN V(ofilt) FROM 4m TO 20m
+.meas TRAN v3_max MAX V(ofilt) FROM 4m TO 20m
+.meas TRAN v3_nom AVG V(ofilt) FROM 4m TO 5m
+.meas TRAN id_rev_min MIN I(D40) FROM 6m TO 15m
+.meas TRAN id_rev_end AVG I(D40) FROM 14m TO 15m
+.meas TRAN t_q1_on WHEN V(vbat)-V(vsys)=0.1 FALL=1 TD=5m
+.meas TRAN vbus_end AVG V(vbus) FROM 14m TO 15m
+.end

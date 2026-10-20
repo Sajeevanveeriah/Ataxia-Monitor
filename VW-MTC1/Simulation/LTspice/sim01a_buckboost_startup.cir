@@ -1,0 +1,33 @@
+* SIM01a - VW-MTC1 3.3 V buck-boost rail (U4 = LTC3536EMSE) - start-up
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : start-up from VIN = 3.7 V (nominal Li-ion) into a 300 mA
+*           resistive load (11 ohm). Check soft start and overshoot (< 3 %).
+* Circuit : vw_3v3_buckboost.inc (L1, C28-C33, R30-R33, U4) with the
+*           proposed values; MODE/SYNC = 0 V (PWM).
+* Source  : ideal 3.7 V + 50 mohm (cell + protection FET). Sources ramp in
+*           with the LTspice 'startup' option (about 20 us).
+* Note    : V(out) is the raw rail node (includes ESL switching spikes from
+*           the ideal switch edges); V(ofilt) is the same rail through a
+*           20 MHz single-pole measurement filter. Overshoot is judged on
+*           V(ofilt) and the raw peak is reported as well.
+.lib LTC3536.sub
+.include vw_3v3_buckboost.inc
+
+.param VIN=3.7
+Vbat   vsrc 0 {VIN}
+Rsrc   vsrc vin 50m
+XBB    vin out 0 ofilt vw_3v3_bb
+Rload  out 0 11
+
+.options plotwinsize=0
+.save V(out) V(ofilt) V(vin) I(Rsrc)
+.tran 0 3m 0 startup
+.meas TRAN vfinal AVG V(ofilt) FROM 2.5m TO 3m
+.meas TRAN vmaxf MAX V(ofilt) FROM 0 TO 3m
+.meas TRAN vmaxraw MAX V(out) FROM 0 TO 3m
+.meas TRAN t10 WHEN V(ofilt)=0.3315 RISE=1
+.meas TRAN t90 WHEN V(ofilt)=2.9835 RISE=1
+.meas TRAN tsettle WHEN V(ofilt)=3.282 RISE=1
+.meas TRAN iinpk MAX I(Rsrc) FROM 0 TO 3m
+.end

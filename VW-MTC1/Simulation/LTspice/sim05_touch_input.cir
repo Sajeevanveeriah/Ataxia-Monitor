@@ -1,0 +1,52 @@
+* SIM05 - VW-MTC1 maze touch-detection input (wire / start / finish, 1 of 3)
+* Voltwyn MazeTrack Controller VW-MTC1 simulation suite
+*
+* Purpose : contact detection with mains interference.
+* Circuit : connector pin -> (ESD diode ignored, as specified) -> RS series
+*           -> node 'in'; RPU pull-up to +3.3 V; CF from 'in' to GND;
+*           'in' drives U7 74LVC1G17-class Schmitt buffer, modelled as an
+*           LTspice SCHMITT A-device: VT+ = 1.7 V, VT- = 1.0 V at VCC 3.3 V
+*           (ASSUMPTION: typical-ish thresholds for 74LVC1G17 at 3.3 V),
+*           output 0 / 3.3 V, 2 ns edges.
+*           Proposed: RS = 100 k, RPU = 1 Meg, CF = 10 nF.
+* Handle ring is at GND. Contact = switch pin -> GND, 1 ohm.
+* Interference: 1.5 m maze wire capacitively coupled to 230 V rms 50 Hz
+*           through CC (50 pF nominal, 100 pF worst case); pin stray 30 pF.
+* Events  :   0 -  60 ms idle (mains only)
+*            60 ms        0.5 ms contact
+*           100 ms        2 ms contact
+*           140 - 160 ms  20 ms contact, 5 ms gap, 165 - 185 ms 20 ms contact
+*           230 - 280 ms  skin bridge wire-to-ring, 100 k to GND (50 ms)
+*           280 - 340 ms  idle
+* Stepped : CFG 0 = proposed (100 k / 1 M / 10 n); CFG 1-6 = candidate
+*           alternatives (RS / RPU / CF, see table); mains phase PH = 0 and
+*           90 degrees (event timing vs mains phase); CC = 50 p and 100 p.
+*           Candidates keep RS + RPU >= 330 k so the DC current through a
+*           person bridging the wire and ring is <= 10 uA (design target).
+.param CFG=0 CC=50p
+.param RS={table(CFG,0,100k,1,22k,2,10k,3,10k,4,10k,5,10k,6,10k,7,10k,8,10k)}
+.param RPU={table(CFG,0,1Meg,1,330k,2,330k,3,330k,4,330k,5,330k,6,330k,7,360k,8,360k)}
+.param CF={table(CFG,0,10n,1,15n,2,15n,3,18n,4,22n,5,27n,6,33n,7,22n,8,27n)}
+.param PH=0
+.step param CFG list 0 1 2 3 4 5 6 7 8
+.step param PH list 0 90
+.step param CC list 50p 100p
+
+V33    vdd 0 3.3
+Vmains mains 0 SINE(0 {230*sqrt(2)} 50 0 0 {PH})
+Cc     mains pin {CC}
+Cstray pin 0 30p
+Scont  pin 0 ccon 0 SCON
+Vccon  ccon 0 PWL(0 0 60m 0 60.001m 1 60.5m 1 60.501m 0 100m 0 100.001m 1 102m 1 102.001m 0
++ 140m 0 140.001m 1 160m 1 160.001m 0 165m 0 165.001m 1 185m 1 185.001m 0)
+Sskin  pin skn cskn 0 SCON
+Rskin  skn 0 100k
+Vcskn  cskn 0 PWL(0 0 230m 0 230.001m 1 280m 1 280.001m 0)
+.model SCON SW(Ron=1 Roff=1e12 Vt=0.5 Vh=0)
+RS     pin in {RS}
+RPU    vdd in {RPU}
+CF     in 0 {CF}
+A7     in 0 0 0 0 0 out 0 SCHMITT Vt=1.35 Vh=0.35 Vhigh=3.3 Vlow=0 Trise=2n Tfall=2n
+.save V(in) V(out) V(pin) I(Scont) I(Rskin)
+.tran 0 340m 0 20u
+.end
