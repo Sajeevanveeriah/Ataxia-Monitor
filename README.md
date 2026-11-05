@@ -111,3 +111,7 @@ The app preserves raw phone proximity readings in their own sensor type. They ar
 The PR workflow builds and tests the Python tools on Windows and Linux, checks the pin-map header on Linux, and builds/tests/lints Android on Linux. It does not flash hardware, run physical measurements or regenerate fabrication exports.
 
 The original thesis and previously delivered package ZIP remain local and are excluded from Git. The original Rev00 package files under `VW-MTC1/` remain available alongside the maintained source tools.
+
+## Project handoff
+
+Read the [project handoff](HANDOFF.md) for current work, checks and the next step.

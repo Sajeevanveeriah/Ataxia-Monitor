@@ -20,3 +20,7 @@ Python tools now have a package build and hardware-free regression suite. See th
 [repository build instructions](../README.md) and
 [latest verification record](../docs/20261020-VW-MTC1-Verification-Rev01.md).
 `Firmware/` still contains a pin-map header only, not a flashable firmware application.
+
+## Project handoff
+
+Read the [project handoff](../HANDOFF.md) for current work, checks and the next step.

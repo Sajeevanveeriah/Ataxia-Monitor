@@ -191,3 +191,7 @@ When changing the sensor pipeline, verify at least:
 - `applicationScope` intentionally outlives activities and ViewModels. Any work launched there must have an explicit lifecycle or cancellation owner.
 - Metric names shown in the UI should stay aligned with the algorithms that produce them. If an algorithm changes meaning, update the domain name and documentation rather than only changing its implementation.
 - Patient identifiers and notes are stored locally as plain Room fields in the current prototype. Any real deployment involving regulated or sensitive study data requires a separate security, consent, retention and access-control design.
+
+## Project handoff
+
+Read the [project handoff](../HANDOFF.md) for current work, checks and the next step.
